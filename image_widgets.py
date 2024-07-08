@@ -1,11 +1,12 @@
 import customtkinter as ctk
 from settings import *
 from tkinter import filedialog
-from PIL import Image, ImageTk, ImageOps, ImageEnhance
+from PIL import Image, ImageTk, ImageOps, ImageEnhance, ImageFilter
 
 
 class ImageFrame(ctk.CTkCanvas):
-    def __init__(self, parent, image_path, image_selected, grey_scale_var, invert_var, brightness_level, vibrance_level):
+    def __init__(self, parent, image_path, image_selected, grey_scale_var,
+                 invert_var, brightness_level, vibrance_level, blur_level, contrast_level, effect_name, flip_option):
         super().__init__(master=parent, bg=BACKGROUND_COLOR, highlightthickness=0, borderwidth=0)
         self.grid(row=0, column=1, sticky='news', padx=10, pady=10)
         self.bind('<Configure>', self.resize_image)
@@ -15,6 +16,10 @@ class ImageFrame(ctk.CTkCanvas):
         self.invert_var = invert_var
         self.brightness_level = brightness_level
         self.vibrance_level = vibrance_level
+        self.blur_level = blur_level
+        self.contrast_level = contrast_level
+        self.effect_name = effect_name
+        self.flip_option = flip_option
         CloseImageButton(self, image_selected)
 
         # bindings
@@ -22,6 +27,10 @@ class ImageFrame(ctk.CTkCanvas):
         self.invert_var.trace('w', self.update_picture)
         self.brightness_level.trace('w', self.update_picture)
         self.vibrance_level.trace('w', self.update_picture)
+        self.blur_level.trace('w', self.update_picture)
+        self.contrast_level.trace('w', self.update_picture)
+        self.effect_name.trace('w', self.update_picture)
+        self.flip_option.trace('w', self.update_picture)
 
     def resize_image(self, event=None):
         """
@@ -56,6 +65,18 @@ class ImageFrame(ctk.CTkCanvas):
 
     def update_picture(self, *args):
         edited_img = self.resized_img
+        # set flip
+        flip_option = self.flip_option.get()
+        if flip_option != 'None':
+            match flip_option:
+                case 'X':
+                    edited_img = ImageOps.mirror(edited_img)
+                case 'Y':
+                    edited_img = ImageOps.flip(edited_img)
+                case 'Both':
+                    edited_img = ImageOps.mirror(edited_img)
+                    edited_img = ImageOps.flip(edited_img)
+
         if self.grey_scale_var.get():
             edited_img = edited_img.convert("L")
         if self.invert_var.get():
@@ -73,6 +94,24 @@ class ImageFrame(ctk.CTkCanvas):
         vibrance_level = self.vibrance_level.get()
         enhancer = ImageEnhance.Color(edited_img)
         edited_img = enhancer.enhance(vibrance_level)
+        # Set Blur
+        blur_level = self.blur_level.get()
+        edited_img = edited_img.filter(ImageFilter.GaussianBlur(blur_level))
+        # Set contrast
+        contrast_level = self.contrast_level.get()
+        enhancer = ImageEnhance.Contrast(edited_img)
+        edited_img = enhancer.enhance(contrast_level)
+        # Apply effect
+        effect_name = self.effect_name.get()
+        if effect_name != 'None':
+            match effect_name:
+                case 'Emboss': filter_name = ImageFilter.EMBOSS
+                case 'Find edges': filter_name = ImageFilter.FIND_EDGES
+                case 'Contour': filter_name = ImageFilter.CONTOUR
+                case 'Edge enhance': filter_name = ImageFilter.EDGE_ENHANCE
+                case _: return
+
+            edited_img = edited_img.filter(filter_name)
 
         self.image_tk = ImageTk.PhotoImage(edited_img)
         self.create_image(self.x_center, self.y_center, anchor='center', image=self.image_tk)

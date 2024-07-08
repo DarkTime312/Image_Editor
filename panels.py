@@ -15,7 +15,6 @@ class SliderPanel(ctk.CTkFrame):
         self.variable.trace('w', self.update_label)
         self.update_label()
 
-
     def set_layout(self):
         self.rowconfigure((0, 1), weight=1, uniform='a')
         self.columnconfigure((0, 1), weight=1, uniform='b')
@@ -50,32 +49,23 @@ class ZoomPanel(SliderPanel):
 
 
 class InvertPanel(ctk.CTkFrame):
-    def __init__(self, parent):
+    def __init__(self, parent, flip_option):
         super().__init__(master=parent, fg_color=DARK_GREY)
         self.pack(fill='x', padx=5, pady=5)
-
+        self.flip_option = flip_option
         self.set_layout()
         self.create_widgets()
 
     def set_layout(self):
         self.rowconfigure((0, 1), weight=1, uniform='a')
-        self.columnconfigure((0, 1, 2, 3), weight=1, uniform='b')
+        self.columnconfigure(0, weight=1, uniform='b')
 
     def create_widgets(self):
         title_label = ctk.CTkLabel(self, text='Invert')
-        title_label.grid(row=0, column=1, columnspan=2)
+        title_label.grid(row=0, column=0, sticky='news', pady=5)
 
-        none_btn = ctk.CTkButton(self, text='None', fg_color=DARK_GREY, hover_color=GREY)
-        none_btn.grid(row=1, column=0, padx=2, pady=5)
-
-        x_btn = ctk.CTkButton(self, text='X', fg_color=DARK_GREY, hover_color=GREY)
-        x_btn.grid(row=1, column=1, padx=2, pady=5)
-
-        y_btn = ctk.CTkButton(self, text='Y', fg_color=DARK_GREY, hover_color=GREY)
-        y_btn.grid(row=1, column=2, padx=2, pady=5)
-
-        y_btn = ctk.CTkButton(self, text='Both', fg_color=DARK_GREY, hover_color=GREY)
-        y_btn.grid(row=1, column=3, padx=2, pady=5)
+        flip_button = ctk.CTkSegmentedButton(self, values=FLIP_OPTIONS, variable=self.flip_option)
+        flip_button.grid(row=1, column=0, sticky='news', pady=5)
 
 
 class ColorSwitches(ctk.CTkFrame):
@@ -93,12 +83,13 @@ class ColorSwitches(ctk.CTkFrame):
         self.columnconfigure((0, 1), weight=1, uniform='b')
 
     def create_widgets(self):
-        black_or_white_switch = ctk.CTkSwitch(self, text='B/W', height=50, button_color=BLUE, fg_color=GREY, variable=self.grey_scale_var)
+        black_or_white_switch = ctk.CTkSwitch(self, text='B/W', height=50, button_color=BLUE, fg_color=GREY,
+                                              variable=self.grey_scale_var)
         black_or_white_switch.grid(row=0, column=0, padx=5)
 
-        invert_color_switch = ctk.CTkSwitch(self, text='Invert', height=50, button_color=BLUE, fg_color=GREY, variable=self.invert_var)
+        invert_color_switch = ctk.CTkSwitch(self, text='Invert', height=50, button_color=BLUE, fg_color=GREY,
+                                            variable=self.invert_var)
         invert_color_switch.grid(row=0, column=1, padx=5)
-
 
 
 class BrightnessPanel(SliderPanel):

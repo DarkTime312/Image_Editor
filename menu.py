@@ -7,7 +7,7 @@ from image_widgets import ExportName, ExportFolder
 
 class MyTabView(ctk.CTkTabview):
     def __init__(self, master, brightness_level, vibrance_level, rotation_degree, zoom_level, blur_level,
-                 contrast_level, grey_scale_var, invert_var):
+                 contrast_level, grey_scale_var, invert_var, effect_name, flip_option):
         super().__init__(master, fg_color=BACKGROUND_COLOR)
         self.grid(row=0, column=0, sticky='news')
 
@@ -17,20 +17,20 @@ class MyTabView(ctk.CTkTabview):
         effects_frm = self.add("Effects")
         export_frm = self.add("Export")
 
-        PositionMenu(position_frm, rotation_degree, zoom_level)
+        PositionMenu(position_frm, rotation_degree, zoom_level, flip_option)
         ColorMenu(color_frm, brightness_level, vibrance_level, grey_scale_var, invert_var)
-        EffectsMenu(effects_frm, blur_level, contrast_level)
+        EffectsMenu(effects_frm, blur_level, contrast_level, effect_name)
         ExportMenu(export_frm)
 
 
 class PositionMenu(ctk.CTkFrame):
-    def __init__(self, parent, rotation_degree, zoom_level):
+    def __init__(self, parent, rotation_degree, zoom_level, flip_option):
         super().__init__(master=parent)
         self.pack(expand=True, fill='both', padx=5)
 
         RotationPanel(parent=self, text='Rotation', max_value=360, variable=rotation_degree)
         ZoomPanel(parent=self, text='Zoom', max_value=200, variable=zoom_level)
-        InvertPanel(self)
+        InvertPanel(self, flip_option)
 
         # RevertButton(self)
 
@@ -52,7 +52,7 @@ class ColorMenu(ctk.CTkFrame):
 
 
 class EffectsMenu(ctk.CTkFrame):
-    def __init__(self, parent, blur_level, contrast_level):
+    def __init__(self, parent, blur_level, contrast_level, effect_name):
         super().__init__(master=parent)
         self.pack(expand=True, fill='both')
 
@@ -61,13 +61,17 @@ class EffectsMenu(ctk.CTkFrame):
                                            fg_color=DARK_GREY,
                                            dropdown_fg_color=DROPDOWN_MENU_COLOR,
                                            button_color=DROPDOWN_MAIN_COLOR,
-                                           button_hover_color=DROPDOWN_HOVER_COLOR)
+                                           button_hover_color=DROPDOWN_HOVER_COLOR,
+                                           variable=effect_name)
         effect_options.pack(fill='x', padx=5, pady=5)
 
         BlurPanel(parent=self, text='Blur', max_value=30, variable=blur_level)
         ContrastPanel(parent=self, text='Contrast', max_value=10, variable=contrast_level)
 
-        # RevertButton(self)
+        RevertButton(self, ((effect_name, EFFECT_OPTIONS[0]),
+                            (blur_level, BLUR_DEFAULT),
+                            (contrast_level, CONTRAST_DEFAULT)
+                            ))
 
 
 class ExportMenu(ctk.CTkFrame):
