@@ -5,11 +5,13 @@ from PIL import Image, ImageTk
 
 
 class ImageFrame(ctk.CTkCanvas):
-    def __init__(self, parent, image_path):
+    def __init__(self, parent, image_path, image_selected):
         super().__init__(master=parent, bg=BACKGROUND_COLOR, highlightthickness=0, borderwidth=0)
         self.grid(row=0, column=1, sticky='news', padx=10, pady=10)
         self.bind('<Configure>', self.resize_image)
         self.image_path = image_path
+        self.image_selected = image_selected
+        CloseImageButton(self, image_selected)
 
     def resize_image(self, event):
         """
@@ -115,3 +117,29 @@ class ImportImage(ctk.CTkButton):
         if img_file:
             self.image_path = img_file
             self.image_selected.set(True)
+
+
+class CloseImageButton(ctk.CTkButton):
+    """
+    A button that will close the image and starts the app from beginning.
+    """
+
+    def __init__(self, parent, image_selected):
+        super().__init__(master=parent,
+                         text='X',
+                         width=20,
+                         height=20,
+                         fg_color=BACKGROUND_COLOR,
+                         hover_color=CLOSE_RED,
+                         text_color=WHITE,
+                         command=self.close_image)
+        self.image_selected = image_selected
+        self.place(relx=0.99, rely=0.01, anchor='ne')
+
+    def close_image(self) -> None:
+        """
+        Changes the image_selected variable to False and that in itself
+        will run the create_widgets function in the main.py
+        :return: None
+        """
+        self.image_selected.set(False)
