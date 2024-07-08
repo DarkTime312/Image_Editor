@@ -79,9 +79,11 @@ class InvertPanel(ctk.CTkFrame):
 
 
 class ColorSwitches(ctk.CTkFrame):
-    def __init__(self, parent):
+    def __init__(self, parent, grey_scale_var, invert_var):
         super().__init__(master=parent, fg_color=DARK_GREY)
         self.pack(padx=5, pady=5, fill='x')
+        self.grey_scale_var = grey_scale_var
+        self.invert_var = invert_var
 
         self.set_layout()
         self.create_widgets()
@@ -91,11 +93,12 @@ class ColorSwitches(ctk.CTkFrame):
         self.columnconfigure((0, 1), weight=1, uniform='b')
 
     def create_widgets(self):
-        black_or_white_switch = ctk.CTkSwitch(self, text='B/W', height=50, button_color=BLUE, fg_color=GREY)
+        black_or_white_switch = ctk.CTkSwitch(self, text='B/W', height=50, button_color=BLUE, fg_color=GREY, variable=self.grey_scale_var)
         black_or_white_switch.grid(row=0, column=0, padx=5)
 
-        invert_color_switch = ctk.CTkSwitch(self, text='Invert', height=50, button_color=BLUE, fg_color=GREY)
+        invert_color_switch = ctk.CTkSwitch(self, text='Invert', height=50, button_color=BLUE, fg_color=GREY, variable=self.invert_var)
         invert_color_switch.grid(row=0, column=1, padx=5)
+
 
 
 class BrightnessPanel(SliderPanel):

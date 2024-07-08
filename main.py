@@ -1,6 +1,7 @@
 import customtkinter as ctk
 from menu import MyTabView
 from image_widgets import ImageFrame, ImportImage
+from settings import *
 
 
 class EditorApp(ctk.CTk):
@@ -17,13 +18,16 @@ class EditorApp(ctk.CTk):
         self.image_selected = ctk.BooleanVar(value=False)
         self.image_selected.trace('w', self.create_widgets)
 
-        self.rotation_degree = ctk.DoubleVar(value=0.0)
-        self.zoom_level = ctk.DoubleVar(value=0.0)
-        self.brightness_level = ctk.DoubleVar(value=1.0)
-        self.vibrance_level = ctk.DoubleVar(value=1.0)
+        self.rotation_degree = ctk.DoubleVar(value=ROTATE_DEFAULT)
+        self.zoom_level = ctk.DoubleVar(value=ZOOM_DEFAULT)
+        self.brightness_level = ctk.DoubleVar(value=BRIGHTNESS_DEFAULT)
+        self.vibrance_level = ctk.DoubleVar(value=VIBRANCE_DEFAULT)
 
-        self.blur_level = ctk.DoubleVar(value=0.0)
-        self.contrast_level = ctk.IntVar(value=0)
+        self.blur_level = ctk.DoubleVar(value=BLUR_DEFAULT)
+        self.contrast_level = ctk.IntVar(value=CONTRAST_DEFAULT)
+
+        self.grey_scale_var = ctk.BooleanVar(value=GRAYSCALE_DEFAULT)
+        self.invert_var = ctk.BooleanVar(value=INVERT_DEFAULT)
 
         self.create_widgets()
 
@@ -37,8 +41,6 @@ class EditorApp(ctk.CTk):
             widget.destroy()
 
         if self.image_selected.get():
-            # self.imported_image.place_forget()
-
             self.set_layout()
             MyTabView(self,
                       self.brightness_level,
@@ -46,8 +48,12 @@ class EditorApp(ctk.CTk):
                       self.rotation_degree,
                       self.zoom_level,
                       self.blur_level,
-                      self.contrast_level)
-            ImageFrame(self, self.imported_image.image_path, self.image_selected)
+                      self.contrast_level,
+                      self.grey_scale_var,
+                      self.invert_var,
+                      )
+            ImageFrame(self, self.imported_image.image_path, self.image_selected, self.grey_scale_var,
+                       self.invert_var, self.brightness_level, self.vibrance_level)
         else:
             self.imported_image = ImportImage(self, self.image_selected)
 

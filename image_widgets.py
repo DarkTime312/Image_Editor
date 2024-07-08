@@ -1,19 +1,29 @@
 import customtkinter as ctk
 from settings import *
 from tkinter import filedialog
-from PIL import Image, ImageTk
+from PIL import Image, ImageTk, ImageOps, ImageEnhance
 
 
 class ImageFrame(ctk.CTkCanvas):
-    def __init__(self, parent, image_path, image_selected):
+    def __init__(self, parent, image_path, image_selected, grey_scale_var, invert_var, brightness_level, vibrance_level):
         super().__init__(master=parent, bg=BACKGROUND_COLOR, highlightthickness=0, borderwidth=0)
         self.grid(row=0, column=1, sticky='news', padx=10, pady=10)
         self.bind('<Configure>', self.resize_image)
         self.image_path = image_path
         self.image_selected = image_selected
+        self.grey_scale_var = grey_scale_var
+        self.invert_var = invert_var
+        self.brightness_level = brightness_level
+        self.vibrance_level = vibrance_level
         CloseImageButton(self, image_selected)
 
-    def resize_image(self, event):
+        # bindings
+        self.grey_scale_var.trace('w', self.update_picture)
+        self.invert_var.trace('w', self.update_picture)
+        self.brightness_level.trace('w', self.update_picture)
+        self.vibrance_level.trace('w', self.update_picture)
+
+    def resize_image(self, event=None):
         """
         Resize the image based on the current window width and height maintaining
         the current aspect ratio.
@@ -21,10 +31,11 @@ class ImageFrame(ctk.CTkCanvas):
         :param event: event object
         :return: None
         """
+
         window_width = event.width
         window_height = event.height
         # print(window_width, window_height)
-        image = Image.open(self.image_path)
+        image = self.image_path
         image_aspect_ratio = image.width / image.height
         window_aspect_ratio = window_width / window_height
 
@@ -38,10 +49,33 @@ class ImageFrame(ctk.CTkCanvas):
             height = window_height
             width = int(height * image_aspect_ratio)
 
-        resized_img = image.resize((width, height))
-        self.image_tk = ImageTk.PhotoImage(resized_img)
+        self.resized_img = image.resize((width, height))
+        self.x_center = window_width // 2
+        self.y_center = window_height // 2
+        self.update_picture()
 
-        self.create_image(window_width // 2, window_height // 2, anchor='center', image=self.image_tk)
+    def update_picture(self, *args):
+        edited_img = self.resized_img
+        if self.grey_scale_var.get():
+            edited_img = edited_img.convert("L")
+        if self.invert_var.get():
+            # Convert the image to RGB mode if necessary
+            if edited_img.mode != 'RGB':
+                edited_img = edited_img.convert('RGB')
+            # Invert the colors of the image
+            edited_img = ImageOps.invert(edited_img)
+
+        # Set brightness
+        brightness_level = self.brightness_level.get()
+        enhancer = ImageEnhance.Brightness(edited_img)
+        edited_img = enhancer.enhance(brightness_level)
+        # set Vibrance
+        vibrance_level = self.vibrance_level.get()
+        enhancer = ImageEnhance.Color(edited_img)
+        edited_img = enhancer.enhance(vibrance_level)
+
+        self.image_tk = ImageTk.PhotoImage(edited_img)
+        self.create_image(self.x_center, self.y_center, anchor='center', image=self.image_tk)
 
 
 class ExportName(ctk.CTkFrame):
@@ -115,7 +149,7 @@ class ImportImage(ctk.CTkButton):
     def select_image(self):
         img_file = filedialog.askopenfilename(title='Open')
         if img_file:
-            self.image_path = img_file
+            self.image_path = Image.open(img_file)
             self.image_selected.set(True)
 
 
