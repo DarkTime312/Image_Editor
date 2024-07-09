@@ -78,7 +78,6 @@ class ImageFrame(ctk.CTkCanvas):
         # Zoom
         zoom_level = self.zoom_level.get()
         new_size = (int(edited_img.width * zoom_level), int(edited_img.height * zoom_level))
-        print(new_size)
         edited_img = edited_img.resize(new_size, Image.LANCZOS)
 
         # set flip
@@ -139,10 +138,6 @@ class ImageFrame(ctk.CTkCanvas):
 
     def get_image(self):
         return self.final_image
-        # location = "C:/Users/rozes/OneDrive/Desktop/test.png"
-        # self.final_image.save(location)
-        # print('saved?')
-
 
 
 class ExportName(ctk.CTkFrame):
