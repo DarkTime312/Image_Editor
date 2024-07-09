@@ -58,31 +58,67 @@ class ImageFrame(ctk.CTkCanvas):
         # Determine resize dimensions
         if image_aspect_ratio > window_aspect_ratio:
             # Fit to width
-            width = window_width
-            height = int(width / image_aspect_ratio)
+            self.width = window_width
+            self.height = int(self.width / image_aspect_ratio)
         else:
             # Fit to height
-            height = window_height
-            width = int(height * image_aspect_ratio)
+            self.height = window_height
+            self.width = int(self.height * image_aspect_ratio)
 
-        self.resized_img = image.resize((width, height))
+        self.resized_img = image.resize((self.width, self.height))
         self.x_center = window_width // 2
         self.y_center = window_height // 2
         self.apply_filters()
 
     def apply_filters(self, *args, img=None):
         edited_img = img or self.resized_img
-        # Rotate
+        # Get data
         ration_degree = self.rotation_degree.get()
-        edited_img = edited_img.rotate(ration_degree, expand=True, resample=Image.BICUBIC)
-        # Zoom
         zoom_level = self.zoom_level.get()
-        new_size = (int(edited_img.width * zoom_level), int(edited_img.height * zoom_level))
-        edited_img = edited_img.resize(new_size, Image.LANCZOS)
-
-        # set flip
         flip_option = self.flip_option.get()
-        if flip_option != 'None':
+        brightness_level = self.brightness_level.get()
+        vibrance_level = self.vibrance_level.get()
+        blur_level = self.blur_level.get()
+        contrast_level = self.contrast_level.get()
+        effect_name = self.effect_name.get()
+
+        # Decide which filters are active
+        rotation_is_active = ration_degree != ROTATE_DEFAULT
+        zoom_is_active = zoom_level != ZOOM_DEFAULT
+        flip_is_active = flip_option != FLIP_OPTIONS[0]
+        brightness_is_active = brightness_level != BRIGHTNESS_DEFAULT
+        vibrance_is_active = brightness_level != BRIGHTNESS_DEFAULT
+        effect_is_active = effect_name != EFFECT_OPTIONS[0]
+        blur_is_active = blur_level != BLUR_DEFAULT
+        contrast_is_active = contrast_level != CONTRAST_DEFAULT
+
+        if rotation_is_active:
+            # Rotate
+            edited_img = edited_img.rotate(ration_degree, expand=True, resample=Image.BICUBIC)
+
+        if zoom_is_active:
+            # If we're getting output image
+            if img:
+                # First store the original image dimensions
+                old_width = edited_img.width
+                old_height = edited_img.height
+            # Zoom by increasing the size of the image
+            new_size = (int(edited_img.width * zoom_level), int(edited_img.height * zoom_level))
+            edited_img = edited_img.resize(new_size, Image.LANCZOS)
+            # If we're getting output image, crop the image
+            if img:
+                left = (new_size[0] - old_width) // 2
+                upper = (new_size[1] - old_height) // 2
+                right = left + old_width
+                lower = upper + old_height
+
+                crop_region = (left, upper, right, lower)
+
+                # Crop the image
+                edited_img = edited_img.crop(crop_region)
+
+        if flip_is_active:
+            # set flip
             match flip_option:
                 case 'X':
                     edited_img = ImageOps.mirror(edited_img)
@@ -92,8 +128,11 @@ class ImageFrame(ctk.CTkCanvas):
                     edited_img = ImageOps.mirror(edited_img)
                     edited_img = ImageOps.flip(edited_img)
 
+        # If black and white mode is active
         if self.grey_scale_var.get():
             edited_img = edited_img.convert("L")
+
+        # If inverted colors is active
         if self.invert_var.get():
             # Convert the image to RGB mode if necessary
             if edited_img.mode != 'RGB':
@@ -101,24 +140,23 @@ class ImageFrame(ctk.CTkCanvas):
             # Invert the colors of the image
             edited_img = ImageOps.invert(edited_img)
 
-        # Set brightness
-        brightness_level = self.brightness_level.get()
-        enhancer = ImageEnhance.Brightness(edited_img)
-        edited_img = enhancer.enhance(brightness_level)
-        # set Vibrance
-        vibrance_level = self.vibrance_level.get()
-        enhancer = ImageEnhance.Color(edited_img)
-        edited_img = enhancer.enhance(vibrance_level)
-        # Set Blur
-        blur_level = self.blur_level.get()
-        edited_img = edited_img.filter(ImageFilter.GaussianBlur(blur_level))
-        # Set contrast
-        contrast_level = self.contrast_level.get()
-        enhancer = ImageEnhance.Contrast(edited_img)
-        edited_img = enhancer.enhance(contrast_level)
-        # Apply effect
-        effect_name = self.effect_name.get()
-        if effect_name != 'None':
+        if brightness_is_active:
+            # Set brightness
+            enhancer = ImageEnhance.Brightness(edited_img)
+            edited_img = enhancer.enhance(brightness_level)
+        if vibrance_is_active:
+            # set Vibrance
+            enhancer = ImageEnhance.Color(edited_img)
+            edited_img = enhancer.enhance(vibrance_level)
+        if blur_is_active:
+            # Set Blur
+            edited_img = edited_img.filter(ImageFilter.GaussianBlur(blur_level))
+        if contrast_is_active:
+            # Set contrast
+            enhancer = ImageEnhance.Contrast(edited_img)
+            edited_img = enhancer.enhance(contrast_level)
+        if effect_is_active:
+            # Apply effect
             match effect_name:
                 case 'Emboss':
                     filter_name = ImageFilter.EMBOSS
@@ -129,17 +167,17 @@ class ImageFrame(ctk.CTkCanvas):
                 case 'Edge enhance':
                     filter_name = ImageFilter.EDGE_ENHANCE
                 case _:
-                    return
+                    raise Exception('Unknown filter!')
 
             edited_img = edited_img.filter(filter_name)
-        self.final_image = edited_img
-        self.image_tk = ImageTk.PhotoImage(edited_img)
-        if img:
-            return self.final_image
-        self.create_image(self.x_center, self.y_center, anchor='center', image=self.image_tk)
 
-    def get_image(self):
-        return self.final_image
+        if img:
+            self.image_tk = ImageTk.PhotoImage(edited_img.resize((self.width, self.height)))
+            # self.create_image(self.x_center, self.y_center, anchor='center', image=self.image_tk)
+        else:
+            self.image_tk = ImageTk.PhotoImage(edited_img)
+        self.create_image(self.x_center, self.y_center, anchor='center', image=self.image_tk)
+        return edited_img
 
 
 class ExportName(ctk.CTkFrame):
