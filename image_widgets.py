@@ -28,16 +28,16 @@ class ImageFrame(ctk.CTkCanvas):
         CloseImageButton(self, image_selected)
 
         # bindings
-        self.grey_scale_var.trace('w', self.update_picture)
-        self.invert_var.trace('w', self.update_picture)
-        self.brightness_level.trace('w', self.update_picture)
-        self.vibrance_level.trace('w', self.update_picture)
-        self.blur_level.trace('w', self.update_picture)
-        self.contrast_level.trace('w', self.update_picture)
-        self.effect_name.trace('w', self.update_picture)
-        self.flip_option.trace('w', self.update_picture)
-        self.rotation_degree.trace('w', self.update_picture)
-        self.zoom_level.trace('w', self.update_picture)
+        self.grey_scale_var.trace('w', self.apply_filters)
+        self.invert_var.trace('w', self.apply_filters)
+        self.brightness_level.trace('w', self.apply_filters)
+        self.vibrance_level.trace('w', self.apply_filters)
+        self.blur_level.trace('w', self.apply_filters)
+        self.contrast_level.trace('w', self.apply_filters)
+        self.effect_name.trace('w', self.apply_filters)
+        self.flip_option.trace('w', self.apply_filters)
+        self.rotation_degree.trace('w', self.apply_filters)
+        self.zoom_level.trace('w', self.apply_filters)
 
     def resize_image(self, event=None):
         """
@@ -50,7 +50,7 @@ class ImageFrame(ctk.CTkCanvas):
 
         window_width = event.width
         window_height = event.height
-        # print(window_width, window_height)
+
         image = self.image_path
         image_aspect_ratio = image.width / image.height
         window_aspect_ratio = window_width / window_height
@@ -68,13 +68,13 @@ class ImageFrame(ctk.CTkCanvas):
         self.resized_img = image.resize((width, height))
         self.x_center = window_width // 2
         self.y_center = window_height // 2
-        self.update_picture()
+        self.apply_filters()
 
-    def update_picture(self, *args):
-        edited_img = self.resized_img
+    def apply_filters(self, *args, img=None):
+        edited_img = img or self.resized_img
         # Rotate
         ration_degree = self.rotation_degree.get()
-        edited_img = edited_img.rotate(ration_degree, expand=True)
+        edited_img = edited_img.rotate(ration_degree, expand=True, resample=Image.BICUBIC)
         # Zoom
         zoom_level = self.zoom_level.get()
         new_size = (int(edited_img.width * zoom_level), int(edited_img.height * zoom_level))
@@ -134,6 +134,8 @@ class ImageFrame(ctk.CTkCanvas):
             edited_img = edited_img.filter(filter_name)
         self.final_image = edited_img
         self.image_tk = ImageTk.PhotoImage(edited_img)
+        if img:
+            return self.final_image
         self.create_image(self.x_center, self.y_center, anchor='center', image=self.image_tk)
 
     def get_image(self):
@@ -185,7 +187,6 @@ class ExportName(ctk.CTkFrame):
     def update_name(self, *args):
         user_entered_text = self.output_img_name.get()
         user_selected_ext = 'jpg' if self.output_img_extention.get() == 0 else 'png'
-        print(user_selected_ext)
         if user_entered_text:
             self.file_name.set(f'{user_entered_text}.{user_selected_ext}')
         else:
@@ -233,9 +234,34 @@ class ImportImage(ctk.CTkButton):
         self.place(relx=0.5, rely=0.5, anchor='center')
 
     def select_image(self):
-        img_file = filedialog.askopenfilename(title='Open')
-        if img_file:
-            self.image_path = Image.open(img_file)
+        file_path = filedialog.askopenfilename(
+            title="Open Image File",
+            filetypes=[
+                ("All Image Files",
+                 "*.bmp;*.dib;*.eps;*.gif;*.icns;*.ico;*.im;*.jpeg;*.jpg;*.msp;*.pcx;*.png;*.ppm;*.pgm;*.pbm;*.sgi;*.spider;*.tga;*.tiff;*.tif;*.webp;*.xbm;*.xpm"),
+                ("BMP Files", "*.bmp;*.dib"),
+                ("EPS Files", "*.eps"),
+                ("GIF Files", "*.gif"),
+                ("ICNS Files", "*.icns"),
+                ("ICO Files", "*.ico"),
+                ("IM Files", "*.im"),
+                ("JPEG Files", "*.jpeg;*.jpg"),
+                ("MSP Files", "*.msp"),
+                ("PCX Files", "*.pcx"),
+                ("PNG Files", "*.png"),
+                ("PPM Files", "*.ppm;*.pgm;*.pbm"),
+                ("SGI Files", "*.sgi"),
+                ("SPIDER Files", "*.spider"),
+                ("TGA Files", "*.tga"),
+                ("TIFF Files", "*.tiff;*.tif"),
+                ("WEBP Files", "*.webp"),
+                ("XBM Files", "*.xbm"),
+                ("XPM Files", "*.xpm")
+            ]
+        )
+
+        if file_path:
+            self.image_path = Image.open(file_path)
             self.image_selected.set(True)
 
 

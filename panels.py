@@ -110,4 +110,4 @@ class BlurPanel(SliderPanel):
 
 class ContrastPanel(SliderPanel):
     def __init__(self, **kwargs):
-        super().__init__(**kwargs)
+        super().__init__(from_=0.5, **kwargs)

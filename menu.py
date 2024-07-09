@@ -96,7 +96,7 @@ class ExportMenu(ctk.CTkFrame):
         folder_name = self.save_location.get()
         if file_name and folder_name:
             final_address = f'{folder_name}/{file_name}'
-            self.image_frame.get_image().save(final_address)
+            self.image_frame.apply_filters(img=self.image_frame.image_path).save(final_address)
 
 
 class RevertButton(ctk.CTkButton):
