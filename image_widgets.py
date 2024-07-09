@@ -1,7 +1,9 @@
-import customtkinter as ctk
-from settings import *
 from tkinter import filedialog
+
+import customtkinter as ctk
 from PIL import Image, ImageTk, ImageOps, ImageEnhance, ImageFilter
+
+from settings import *
 
 
 class ImageFrame(ctk.CTkCanvas):
@@ -12,6 +14,8 @@ class ImageFrame(ctk.CTkCanvas):
         super().__init__(master=parent, bg=BACKGROUND_COLOR, highlightthickness=0, borderwidth=0)
         self.grid(row=0, column=1, sticky='news', padx=10, pady=10)
         self.bind('<Configure>', self.resize_image)
+
+        # Storing references
         self.image_path = image_path
         self.image_selected = image_selected
         self.grey_scale_var = grey_scale_var
@@ -25,19 +29,15 @@ class ImageFrame(ctk.CTkCanvas):
         self.rotation_degree = rotation_degree
         self.zoom_level = zoom_level
 
+        # Create the Close image button
         CloseImageButton(self, image_selected)
 
         # bindings
-        self.grey_scale_var.trace('w', self.apply_filters)
-        self.invert_var.trace('w', self.apply_filters)
-        self.brightness_level.trace('w', self.apply_filters)
-        self.vibrance_level.trace('w', self.apply_filters)
-        self.blur_level.trace('w', self.apply_filters)
-        self.contrast_level.trace('w', self.apply_filters)
-        self.effect_name.trace('w', self.apply_filters)
-        self.flip_option.trace('w', self.apply_filters)
-        self.rotation_degree.trace('w', self.apply_filters)
-        self.zoom_level.trace('w', self.apply_filters)
+        variables = (self.grey_scale_var, self.invert_var, self.brightness_level, self.vibrance_level,
+                     self.blur_level, self.contrast_level, self.effect_name, self.flip_option,
+                     self.rotation_degree, self.zoom_level)
+        for variable in variables:
+            variable.trace('w', self.apply_filters)
 
     def resize_image(self, event=None):
         """
@@ -70,91 +70,148 @@ class ImageFrame(ctk.CTkCanvas):
         self.y_center = window_height // 2
         self.apply_filters()
 
-    def apply_filters(self, *args, img=None):
-        edited_img = img or self.resized_img
-        # Get data
-        ration_degree = self.rotation_degree.get()
-        zoom_level = self.zoom_level.get()
-        flip_option = self.flip_option.get()
-        brightness_level = self.brightness_level.get()
-        vibrance_level = self.vibrance_level.get()
-        blur_level = self.blur_level.get()
-        contrast_level = self.contrast_level.get()
-        effect_name = self.effect_name.get()
+    def apply_filters(self, *args, export=False) -> Image:
+        edited_img = self.image_path if export else self.resized_img
 
-        # Decide which filters are active
-        rotation_is_active = ration_degree != ROTATE_DEFAULT
-        zoom_is_active = zoom_level != ZOOM_DEFAULT
-        flip_is_active = flip_option != FLIP_OPTIONS[0]
-        brightness_is_active = brightness_level != BRIGHTNESS_DEFAULT
-        vibrance_is_active = brightness_level != BRIGHTNESS_DEFAULT
-        effect_is_active = effect_name != EFFECT_OPTIONS[0]
-        blur_is_active = blur_level != BLUR_DEFAULT
-        contrast_is_active = contrast_level != CONTRAST_DEFAULT
+        # Apply each filter or transformation
+        edited_img = self.apply_rotation(edited_img)
+        edited_img = self.apply_zoom(edited_img, export=export)
+        edited_img = self.apply_flip(edited_img)
+        edited_img = self.apply_black_and_white(edited_img)
+        edited_img = self.apply_color_inversion(edited_img)
+        edited_img = self.apply_brightness(edited_img)
+        edited_img = self.apply_vibrance(edited_img)
+        edited_img = self.apply_contrast(edited_img)
+        edited_img = self.apply_blur(edited_img)
+        edited_img = self.apply_effect(edited_img)
+
+        # If we're exporting an image
+        if export:
+            # resize the image only for display purposes
+            # Use the last calculated size for the window
+            display_img = edited_img.resize((self.width, self.height))
+        else:
+            # No need to resize because we already used a resized picture
+            display_img = edited_img
+
+        self.image_tk = ImageTk.PhotoImage(display_img)
+        # Add the image on canvas
+        self.create_image(self.x_center, self.y_center, anchor='center', image=self.image_tk)
+        # Return the edited image, this only will be used when we export a picture
+        return edited_img
+
+    def apply_rotation(self, img):
+        ration_degree: float = self.rotation_degree.get()
+        rotation_is_active: bool = ration_degree != ROTATE_DEFAULT
 
         if rotation_is_active:
             # Rotate
-            edited_img = edited_img.rotate(ration_degree, expand=True, resample=Image.BICUBIC)
+            img = img.rotate(ration_degree, expand=True, resample=Image.BICUBIC)
+        return img
+
+    def apply_zoom(self, img, export):
+        zoom_level: float = self.zoom_level.get()
+        zoom_is_active: bool = zoom_level != ZOOM_DEFAULT
 
         if zoom_is_active:
-            # If we're getting output image
-            if img:
-                # First store the original image dimensions
-                old_width = edited_img.width
-                old_height = edited_img.height
             # Zoom by increasing the size of the image
-            new_size = (int(edited_img.width * zoom_level), int(edited_img.height * zoom_level))
-            edited_img = edited_img.resize(new_size, Image.LANCZOS)
-            # If we're getting output image, crop the image
-            if img:
+            new_size = (int(img.width * zoom_level), int(img.height * zoom_level))
+            img = img.resize(new_size, Image.LANCZOS)
+
+            # If we're getting output image
+            if export:
+                # First store the original image dimensions
+                old_width = self.image_path.width
+                old_height = self.image_path.height
+
                 left = (new_size[0] - old_width) // 2
                 upper = (new_size[1] - old_height) // 2
                 right = left + old_width
                 lower = upper + old_height
 
                 crop_region = (left, upper, right, lower)
-
                 # Crop the image
-                edited_img = edited_img.crop(crop_region)
+                img = img.crop(crop_region)
+        return img
+
+    def apply_flip(self, img):
+        flip_option: str = self.flip_option.get()
+        flip_is_active: bool = flip_option != FLIP_OPTIONS[0]
 
         if flip_is_active:
             # set flip
             match flip_option:
                 case 'X':
-                    edited_img = ImageOps.mirror(edited_img)
+                    img = ImageOps.mirror(img)
                 case 'Y':
-                    edited_img = ImageOps.flip(edited_img)
+                    img = ImageOps.flip(img)
                 case 'Both':
-                    edited_img = ImageOps.mirror(edited_img)
-                    edited_img = ImageOps.flip(edited_img)
+                    img = ImageOps.mirror(img)
+                    img = ImageOps.flip(img)
+        return img
 
-        # If black and white mode is active
-        if self.grey_scale_var.get():
-            edited_img = edited_img.convert("L")
+    def apply_black_and_white(self, img):
+        black_and_white_is_active: bool = self.grey_scale_var.get()
+        if black_and_white_is_active:
+            img = img.convert("L")
+        return img
 
-        # If inverted colors is active
-        if self.invert_var.get():
+    def apply_color_inversion(self, img):
+        invert_color_is_active: bool = self.invert_var.get()
+        if invert_color_is_active:
             # Convert the image to RGB mode if necessary
-            if edited_img.mode != 'RGB':
-                edited_img = edited_img.convert('RGB')
+            if img.mode != 'RGB':
+                img = img.convert('RGB')
             # Invert the colors of the image
-            edited_img = ImageOps.invert(edited_img)
+            img = ImageOps.invert(img)
+
+        return img
+
+    def apply_brightness(self, img):
+        brightness_level: float = self.brightness_level.get()
+        brightness_is_active: bool = brightness_level != BRIGHTNESS_DEFAULT
 
         if brightness_is_active:
             # Set brightness
-            enhancer = ImageEnhance.Brightness(edited_img)
-            edited_img = enhancer.enhance(brightness_level)
+            enhancer = ImageEnhance.Brightness(img)
+            img = enhancer.enhance(brightness_level)
+        return img
+
+    def apply_vibrance(self, img):
+        vibrance_level: float = self.vibrance_level.get()
+        vibrance_is_active: bool = vibrance_level != BRIGHTNESS_DEFAULT
+
         if vibrance_is_active:
             # set Vibrance
-            enhancer = ImageEnhance.Color(edited_img)
-            edited_img = enhancer.enhance(vibrance_level)
-        if blur_is_active:
-            # Set Blur
-            edited_img = edited_img.filter(ImageFilter.GaussianBlur(blur_level))
+            enhancer = ImageEnhance.Color(img)
+            img = enhancer.enhance(vibrance_level)
+
+        return img
+
+    def apply_contrast(self, img):
+        contrast_level: float = self.contrast_level.get()
+        contrast_is_active: bool = contrast_level != CONTRAST_DEFAULT
         if contrast_is_active:
             # Set contrast
-            enhancer = ImageEnhance.Contrast(edited_img)
-            edited_img = enhancer.enhance(contrast_level)
+            enhancer = ImageEnhance.Contrast(img)
+            img = enhancer.enhance(contrast_level)
+
+        return img
+
+    def apply_blur(self, img):
+        blur_level: float = self.blur_level.get()
+        blur_is_active: bool = blur_level != BLUR_DEFAULT
+
+        if blur_is_active:
+            # Set Blur
+            img = img.filter(ImageFilter.GaussianBlur(blur_level))
+
+        return img
+
+    def apply_effect(self, img):
+        effect_name: str = self.effect_name.get()
+        effect_is_active: bool = effect_name != EFFECT_OPTIONS[0]
+
         if effect_is_active:
             # Apply effect
             match effect_name:
@@ -169,15 +226,9 @@ class ImageFrame(ctk.CTkCanvas):
                 case _:
                     raise Exception('Unknown filter!')
 
-            edited_img = edited_img.filter(filter_name)
+            img = img.filter(filter_name)
 
-        if img:
-            self.image_tk = ImageTk.PhotoImage(edited_img.resize((self.width, self.height)))
-            # self.create_image(self.x_center, self.y_center, anchor='center', image=self.image_tk)
-        else:
-            self.image_tk = ImageTk.PhotoImage(edited_img)
-        self.create_image(self.x_center, self.y_center, anchor='center', image=self.image_tk)
-        return edited_img
+        return img
 
 
 class ExportName(ctk.CTkFrame):

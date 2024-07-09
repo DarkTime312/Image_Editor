@@ -1,4 +1,5 @@
 import customtkinter as ctk
+
 from settings import *
 from panels import RotationPanel, ZoomPanel, InvertPanel, ColorSwitches, BrightnessPanel, VibrancePanel, \
     BlurPanel, ContrastPanel
@@ -96,7 +97,10 @@ class ExportMenu(ctk.CTkFrame):
         folder_name = self.save_location.get()
         if file_name and folder_name:
             final_address = f'{folder_name}/{file_name}'
-            self.image_frame.apply_filters(img=self.image_frame.image_path).save(final_address)
+            image = self.image_frame.apply_filters(export=True)
+            if 'jpg' in file_name and image.mode == 'RGBA':
+                image = image.convert('RGB')
+            image.save(final_address)
 
 
 class RevertButton(ctk.CTkButton):

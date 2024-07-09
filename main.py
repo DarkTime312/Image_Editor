@@ -1,4 +1,5 @@
 import customtkinter as ctk
+
 from menu import MyTabView
 from image_widgets import ImageFrame, ImportImage
 from settings import *
@@ -13,9 +14,10 @@ class EditorApp(ctk.CTk):
         self.geometry('1000x600')
         self.title('Photo Editor')
         self.minsize(800, 500)
+
+        # A flag that shows if an image is selected or not
         self.image_selected = ctk.BooleanVar(value=False)
         self.image_selected.trace('w', self.create_widgets)
-
         self.create_widgets()
 
     def create_variables(self):
@@ -24,15 +26,13 @@ class EditorApp(ctk.CTk):
         self.zoom_level = ctk.DoubleVar(value=ZOOM_DEFAULT)
         self.brightness_level = ctk.DoubleVar(value=BRIGHTNESS_DEFAULT)
         self.vibrance_level = ctk.DoubleVar(value=VIBRANCE_DEFAULT)
-
         self.blur_level = ctk.DoubleVar(value=BLUR_DEFAULT)
         self.contrast_level = ctk.DoubleVar(value=CONTRAST_DEFAULT)
-
         self.grey_scale_var = ctk.BooleanVar(value=GRAYSCALE_DEFAULT)
         self.invert_var = ctk.BooleanVar(value=INVERT_DEFAULT)
-
         self.effect_name = ctk.StringVar(value=EFFECT_OPTIONS[0])
         self.flip_option = ctk.StringVar(value=FLIP_OPTIONS[0])
+
         self.output_img_name = ctk.StringVar()
         self.output_img_extention = ctk.IntVar(value=0)
         self.file_name = ctk.StringVar()
@@ -43,6 +43,7 @@ class EditorApp(ctk.CTk):
         self.columnconfigure(1, weight=3, uniform='a')
 
     def create_widgets(self, *args):
+        # Destroy all the widgets if they exist from before
         for widget in self.winfo_children():
             widget.destroy()
 
