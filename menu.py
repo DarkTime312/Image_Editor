@@ -7,7 +7,8 @@ from image_widgets import ExportName, ExportFolder
 
 class MyTabView(ctk.CTkTabview):
     def __init__(self, master, brightness_level, vibrance_level, rotation_degree, zoom_level, blur_level,
-                 contrast_level, grey_scale_var, invert_var, effect_name, flip_option):
+                 contrast_level, grey_scale_var, invert_var, effect_name, flip_option, output_img_name,
+                 output_img_extention, file_name, image_frame):
         super().__init__(master, fg_color=BACKGROUND_COLOR)
         self.grid(row=0, column=0, sticky='news')
 
@@ -20,7 +21,7 @@ class MyTabView(ctk.CTkTabview):
         PositionMenu(position_frm, rotation_degree, zoom_level, flip_option)
         ColorMenu(color_frm, brightness_level, vibrance_level, grey_scale_var, invert_var)
         EffectsMenu(effects_frm, blur_level, contrast_level, effect_name)
-        ExportMenu(export_frm)
+        ExportMenu(export_frm, output_img_name, output_img_extention, file_name, image_frame)
 
 
 class PositionMenu(ctk.CTkFrame):
@@ -29,10 +30,13 @@ class PositionMenu(ctk.CTkFrame):
         self.pack(expand=True, fill='both', padx=5)
 
         RotationPanel(parent=self, text='Rotation', max_value=360, variable=rotation_degree)
-        ZoomPanel(parent=self, text='Zoom', max_value=200, variable=zoom_level)
+        ZoomPanel(parent=self, text='Zoom', max_value=2, variable=zoom_level)
         InvertPanel(self, flip_option)
 
-        # RevertButton(self)
+        RevertButton(self, ((rotation_degree, ROTATE_DEFAULT),
+                            (zoom_level, ZOOM_DEFAULT),
+                            (flip_option, FLIP_OPTIONS[0])
+                            ))
 
 
 class ColorMenu(ctk.CTkFrame):
@@ -75,14 +79,24 @@ class EffectsMenu(ctk.CTkFrame):
 
 
 class ExportMenu(ctk.CTkFrame):
-    def __init__(self, parent):
+    def __init__(self, parent, output_img_name, output_img_extention, file_name, image_frame):
         super().__init__(master=parent)
         self.pack(expand=True, fill='both')
+        self.file_name = file_name
+        self.save_location = ctk.StringVar()
+        self.image_frame = image_frame
 
-        ExportName(self)
-        ExportFolder(self)
-        save_btn = ctk.CTkButton(self, text='Save', width=150)
+        ExportName(self, output_img_name, output_img_extention, file_name)
+        ExportFolder(self, self.save_location)
+        save_btn = ctk.CTkButton(self, text='Save', width=150, command=self.save_file)
         save_btn.pack(side='bottom', pady=15)
+
+    def save_file(self):
+        file_name = self.file_name.get()
+        folder_name = self.save_location.get()
+        if file_name and folder_name:
+            final_address = f'{folder_name}/{file_name}'
+            self.image_frame.get_image().save(final_address)
 
 
 class RevertButton(ctk.CTkButton):

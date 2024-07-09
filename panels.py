@@ -3,11 +3,12 @@ from settings import *
 
 
 class SliderPanel(ctk.CTkFrame):
-    def __init__(self, parent, text, max_value, variable=None):
+    def __init__(self, parent, text, max_value, from_=0,  variable=None):
         super().__init__(master=parent, fg_color=DARK_GREY)
         self.text = text
         self.max_value = max_value
         self.variable = variable
+        self.from_ = from_
         self.pack(fill='x', padx=5, pady=5)
 
         self.set_layout()
@@ -27,7 +28,7 @@ class SliderPanel(ctk.CTkFrame):
         self.slide_value_indicator.grid(row=0, column=1, sticky='e', padx=5, pady=5)
 
         slider = ctk.CTkSlider(self,
-                               from_=0,
+                               from_=self.from_,
                                to=self.max_value,
                                fg_color=SLIDER_BG,
                                variable=self.variable)
@@ -45,7 +46,7 @@ class RotationPanel(SliderPanel):
 
 class ZoomPanel(SliderPanel):
     def __init__(self, **kwargs):
-        super().__init__(**kwargs)
+        super().__init__(from_=0.5, **kwargs)
 
 
 class InvertPanel(ctk.CTkFrame):

@@ -16,7 +16,6 @@ class EditorApp(ctk.CTk):
         self.image_selected = ctk.BooleanVar(value=False)
         self.image_selected.trace('w', self.create_widgets)
 
-
         self.create_widgets()
 
     def create_variables(self):
@@ -34,6 +33,9 @@ class EditorApp(ctk.CTk):
 
         self.effect_name = ctk.StringVar(value=EFFECT_OPTIONS[0])
         self.flip_option = ctk.StringVar(value=FLIP_OPTIONS[0])
+        self.output_img_name = ctk.StringVar()
+        self.output_img_extention = ctk.IntVar(value=0)
+        self.file_name = ctk.StringVar()
 
     def set_layout(self):
         self.rowconfigure(0, weight=1)
@@ -48,6 +50,11 @@ class EditorApp(ctk.CTk):
 
         if self.image_selected.get():
             self.set_layout()
+            self.image_frame = ImageFrame(self, self.imported_image.image_path, self.image_selected,
+                                          self.grey_scale_var,
+                                          self.invert_var, self.brightness_level, self.vibrance_level, self.blur_level,
+                                          self.contrast_level, self.effect_name, self.flip_option, self.rotation_degree,
+                                          self.zoom_level)
             MyTabView(self,
                       self.brightness_level,
                       self.vibrance_level,
@@ -59,10 +66,11 @@ class EditorApp(ctk.CTk):
                       self.invert_var,
                       self.effect_name,
                       self.flip_option,
+                      self.output_img_name,
+                      self.output_img_extention,
+                      self.file_name,
+                      self.image_frame
                       )
-            ImageFrame(self, self.imported_image.image_path, self.image_selected, self.grey_scale_var,
-                       self.invert_var, self.brightness_level, self.vibrance_level, self.blur_level,
-                       self.contrast_level, self.effect_name, self.flip_option)
         else:
             self.imported_image = ImportImage(self, self.image_selected)
 

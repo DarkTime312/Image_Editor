@@ -6,7 +6,9 @@ from PIL import Image, ImageTk, ImageOps, ImageEnhance, ImageFilter
 
 class ImageFrame(ctk.CTkCanvas):
     def __init__(self, parent, image_path, image_selected, grey_scale_var,
-                 invert_var, brightness_level, vibrance_level, blur_level, contrast_level, effect_name, flip_option):
+                 invert_var, brightness_level, vibrance_level, blur_level,
+                 contrast_level, effect_name, flip_option, rotation_degree,
+                 zoom_level):
         super().__init__(master=parent, bg=BACKGROUND_COLOR, highlightthickness=0, borderwidth=0)
         self.grid(row=0, column=1, sticky='news', padx=10, pady=10)
         self.bind('<Configure>', self.resize_image)
@@ -20,6 +22,9 @@ class ImageFrame(ctk.CTkCanvas):
         self.contrast_level = contrast_level
         self.effect_name = effect_name
         self.flip_option = flip_option
+        self.rotation_degree = rotation_degree
+        self.zoom_level = zoom_level
+
         CloseImageButton(self, image_selected)
 
         # bindings
@@ -31,6 +36,8 @@ class ImageFrame(ctk.CTkCanvas):
         self.contrast_level.trace('w', self.update_picture)
         self.effect_name.trace('w', self.update_picture)
         self.flip_option.trace('w', self.update_picture)
+        self.rotation_degree.trace('w', self.update_picture)
+        self.zoom_level.trace('w', self.update_picture)
 
     def resize_image(self, event=None):
         """
@@ -65,6 +72,15 @@ class ImageFrame(ctk.CTkCanvas):
 
     def update_picture(self, *args):
         edited_img = self.resized_img
+        # Rotate
+        ration_degree = self.rotation_degree.get()
+        edited_img = edited_img.rotate(ration_degree, expand=True)
+        # Zoom
+        zoom_level = self.zoom_level.get()
+        new_size = (int(edited_img.width * zoom_level), int(edited_img.height * zoom_level))
+        print(new_size)
+        edited_img = edited_img.resize(new_size, Image.LANCZOS)
+
         # set flip
         flip_option = self.flip_option.get()
         if flip_option != 'None':
@@ -105,22 +121,39 @@ class ImageFrame(ctk.CTkCanvas):
         effect_name = self.effect_name.get()
         if effect_name != 'None':
             match effect_name:
-                case 'Emboss': filter_name = ImageFilter.EMBOSS
-                case 'Find edges': filter_name = ImageFilter.FIND_EDGES
-                case 'Contour': filter_name = ImageFilter.CONTOUR
-                case 'Edge enhance': filter_name = ImageFilter.EDGE_ENHANCE
-                case _: return
+                case 'Emboss':
+                    filter_name = ImageFilter.EMBOSS
+                case 'Find edges':
+                    filter_name = ImageFilter.FIND_EDGES
+                case 'Contour':
+                    filter_name = ImageFilter.CONTOUR
+                case 'Edge enhance':
+                    filter_name = ImageFilter.EDGE_ENHANCE
+                case _:
+                    return
 
             edited_img = edited_img.filter(filter_name)
-
+        self.final_image = edited_img
         self.image_tk = ImageTk.PhotoImage(edited_img)
         self.create_image(self.x_center, self.y_center, anchor='center', image=self.image_tk)
 
+    def get_image(self):
+        return self.final_image
+        # location = "C:/Users/rozes/OneDrive/Desktop/test.png"
+        # self.final_image.save(location)
+        # print('saved?')
+
+
 
 class ExportName(ctk.CTkFrame):
-    def __init__(self, parent):
+    def __init__(self, parent, output_img_name, output_img_extention, file_name):
         super().__init__(master=parent, fg_color=DARK_GREY)
         self.pack(padx=5, pady=5, fill='x')
+        self.output_img_name = output_img_name
+        self.file_name = file_name
+        self.output_img_extention = output_img_extention
+
+        self.output_img_name.trace('w', self.update_name)
 
         self.set_layout()
         self.create_widgets()
@@ -130,23 +163,45 @@ class ExportName(ctk.CTkFrame):
         self.columnconfigure((0, 1), weight=1, uniform='b')
 
     def create_widgets(self):
-        file_name_entry = ctk.CTkEntry(self, width=180)
+        file_name_entry = ctk.CTkEntry(self, width=180, textvariable=self.output_img_name)
         file_name_entry.grid(row=0, column=0, columnspan=2, padx=20, pady=5, sticky='ew')
 
-        jpg_check_box = ctk.CTkCheckBox(self, text='jpg')
-        jpg_check_box.grid(row=1, column=0, padx=(40, 20))
+        self.jpg_check_box = ctk.CTkCheckBox(self, text='jpg', variable=self.output_img_extention, onvalue=0,
+                                             command=lambda: self.on_checkbox_change('jpg'))
+        self.jpg_check_box.grid(row=1, column=0, padx=(40, 20))
 
-        png_check_box = ctk.CTkCheckBox(self, text='png')
-        png_check_box.grid(row=1, column=1)
+        self.png_check_box = ctk.CTkCheckBox(self, text='png', variable=self.output_img_extention, onvalue=1,
+                                             command=lambda: self.on_checkbox_change('png'))
+        self.png_check_box.grid(row=1, column=1)
 
-        image_name_label = ctk.CTkLabel(self, text='file.png')
+        image_name_label = ctk.CTkLabel(self, textvariable=self.file_name)
         image_name_label.grid(row=2, column=0, columnspan=2)
+
+    def on_checkbox_change(self, selected_value):
+        if selected_value == "jpg":
+            self.jpg_check_box.select()
+            self.png_check_box.deselect()
+            self.update_name()
+        elif selected_value == "png":
+            self.jpg_check_box.deselect()
+            self.png_check_box.select()
+            self.update_name()
+
+    def update_name(self, *args):
+        user_entered_text = self.output_img_name.get()
+        user_selected_ext = 'jpg' if self.output_img_extention.get() == 0 else 'png'
+        print(user_selected_ext)
+        if user_entered_text:
+            self.file_name.set(f'{user_entered_text}.{user_selected_ext}')
+        else:
+            self.file_name.set('')
 
 
 class ExportFolder(ctk.CTkFrame):
-    def __init__(self, parent):
+    def __init__(self, parent, save_location):
         super().__init__(master=parent, fg_color=DARK_GREY)
         self.pack(padx=5, pady=5, fill='x')
+        self.save_location = save_location
 
         self.set_layout()
         self.create_widgets()
@@ -159,7 +214,7 @@ class ExportFolder(ctk.CTkFrame):
         select_folder_btn = ctk.CTkButton(self, text='Open Explorer', width=150, command=self.get_save_folder)
         select_folder_btn.grid(row=0, column=0, pady=5)
 
-        self.save_folder_entry = ctk.CTkEntry(self, width=200)
+        self.save_folder_entry = ctk.CTkEntry(self, width=200, textvariable=self.save_location)
         self.save_folder_entry.grid(row=1, column=0, ipady=10, padx=5, pady=5, sticky='ew')
 
     def get_save_folder(self) -> None:
@@ -172,10 +227,7 @@ class ExportFolder(ctk.CTkFrame):
         save_folder = filedialog.askdirectory(title='Select Folder')
         # If user selected a folder
         if save_folder:
-            # First clear the entry box
-            self.save_folder_entry.delete(0, 'end')
-            # Then put the address into entry box
-            self.save_folder_entry.insert(0, save_folder)
+            self.save_location.set(save_folder)
 
 
 class ImportImage(ctk.CTkButton):

@@ -1,6 +1,6 @@
 # default values 
 ROTATE_DEFAULT = 0
-ZOOM_DEFAULT = 0
+ZOOM_DEFAULT = 1
 FLIP_OPTIONS = ['None', 'X', 'Y', 'Both']
 BLUR_DEFAULT = 0
 CONTRAST_DEFAULT = 1
