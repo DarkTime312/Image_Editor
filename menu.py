@@ -8,7 +8,7 @@ from image_widgets import ExportName, ExportFolder
 
 class MyTabView(ctk.CTkTabview):
     def __init__(self, master, brightness_level, vibrance_level, rotation_degree, zoom_level, blur_level,
-                 contrast_level, grey_scale_var, invert_var, effect_name, flip_option, image_frame):
+                 contrast_level, grey_scale_var, invert_var, effect_name, flip_option, apply_filters):
         super().__init__(master, fg_color=BACKGROUND_COLOR)
         self.grid(row=0, column=0, sticky='news')
 
@@ -21,7 +21,7 @@ class MyTabView(ctk.CTkTabview):
         PositionMenu(position_frm, rotation_degree, zoom_level, flip_option)
         ColorMenu(color_frm, brightness_level, vibrance_level, grey_scale_var, invert_var)
         EffectsMenu(effects_frm, blur_level, contrast_level, effect_name)
-        ExportMenu(export_frm, image_frame)
+        ExportMenu(export_frm, apply_filters)
 
 
 class PositionMenu(ctk.CTkFrame):
@@ -79,10 +79,10 @@ class EffectsMenu(ctk.CTkFrame):
 
 
 class ExportMenu(ctk.CTkFrame):
-    def __init__(self, parent, image_frame):
+    def __init__(self, parent, apply_filters):
         super().__init__(master=parent)
         self.pack(expand=True, fill='both')
-        self.image_frame = image_frame
+        self.apply_filters = apply_filters
 
         # Output file name variables
         self.save_location = ctk.StringVar()
@@ -104,7 +104,7 @@ class ExportMenu(ctk.CTkFrame):
         folder_name = self.save_location.get()
         if file_name and folder_name:
             final_address = f'{folder_name}/{file_name}'
-            image = self.image_frame.apply_filters(export=True)
+            image = self.apply_filters(export=True)
             if 'jpg' in file_name and image.mode == 'RGBA':
                 image = image.convert('RGB')
             image.save(final_address)
