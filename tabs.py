@@ -1,14 +1,14 @@
 import customtkinter as ctk
+from PIL import ImageFilter
 
 from settings import *
 from panels import RotationPanel, ZoomPanel, InvertPanel, ColorSwitches, BrightnessPanel, VibrancePanel, \
-    BlurPanel, ContrastPanel
-from image_widgets import ExportName, ExportFolder
+    BlurPanel, ContrastPanel, RevertButton, ExportName, ExportFolder
 
 
 class MyTabView(ctk.CTkTabview):
     def __init__(self, master, brightness_level, vibrance_level, rotation_degree, zoom_level, blur_level,
-                 contrast_level, grey_scale_var, invert_var, effect_name, flip_option, apply_filters):
+                 contrast_level, grey_scale_var, invert_var, effect_name, flip_option, apply_filters, original_img):
         super().__init__(master, fg_color=BACKGROUND_COLOR)
         self.grid(row=0, column=0, sticky='news')
 
@@ -18,20 +18,20 @@ class MyTabView(ctk.CTkTabview):
         effects_frm = self.add("Effects")
         export_frm = self.add("Export")
 
-        PositionMenu(position_frm, rotation_degree, zoom_level, flip_option)
-        ColorMenu(color_frm, brightness_level, vibrance_level, grey_scale_var, invert_var)
-        EffectsMenu(effects_frm, blur_level, contrast_level, effect_name)
-        ExportMenu(export_frm, apply_filters)
+        self.position_tab = PositionTab(position_frm, rotation_degree, zoom_level, flip_option, original_img)
+        self.color_tab = ColorTab(color_frm, brightness_level, vibrance_level, grey_scale_var, invert_var)
+        self.effects_tab = EffectsTab(effects_frm, blur_level, contrast_level, effect_name)
+        ExportTab(export_frm, apply_filters)
 
 
-class PositionMenu(ctk.CTkFrame):
-    def __init__(self, parent, rotation_degree, zoom_level, flip_option):
+class PositionTab(ctk.CTkFrame):
+    def __init__(self, parent, rotation_degree, zoom_level, flip_option, original_img):
         super().__init__(master=parent)
         self.pack(expand=True, fill='both', padx=5)
 
-        RotationPanel(parent=self, text='Rotation', max_value=360, variable=rotation_degree)
-        ZoomPanel(parent=self, text='Zoom', max_value=2, variable=zoom_level)
-        InvertPanel(self, flip_option)
+        self.rotation_menu = RotationPanel(parent=self, text='Rotation', max_value=360, variable=rotation_degree)
+        self.zoom_panel = ZoomPanel(parent=self, text='Zoom', max_value=2, variable=zoom_level, org_img=original_img)
+        self.invert_panel = InvertPanel(self, flip_option)
 
         RevertButton(self, ((rotation_degree, ROTATE_DEFAULT),
                             (zoom_level, ZOOM_DEFAULT),
@@ -39,14 +39,14 @@ class PositionMenu(ctk.CTkFrame):
                             ))
 
 
-class ColorMenu(ctk.CTkFrame):
+class ColorTab(ctk.CTkFrame):
     def __init__(self, parent, brightness_level, vibrance_level, grey_scale_var, invert_var):
         super().__init__(master=parent)
         self.pack(expand=True, fill='both')
 
-        ColorSwitches(self, grey_scale_var, invert_var)
-        BrightnessPanel(parent=self, text='Brightness', max_value=5, variable=brightness_level)
-        VibrancePanel(parent=self, text='Vibrance', max_value=5, variable=vibrance_level)
+        self.color_switches = ColorSwitches(self, grey_scale_var, invert_var)
+        self.brightness_panel = BrightnessPanel(parent=self, text='Brightness', max_value=5, variable=brightness_level)
+        self.vibrance_panel = VibrancePanel(parent=self, text='Vibrance', max_value=5, variable=vibrance_level)
 
         RevertButton(self, ((grey_scale_var, GRAYSCALE_DEFAULT),
                             (invert_var, INVERT_DEFAULT),
@@ -55,10 +55,11 @@ class ColorMenu(ctk.CTkFrame):
                             ))
 
 
-class EffectsMenu(ctk.CTkFrame):
+class EffectsTab(ctk.CTkFrame):
     def __init__(self, parent, blur_level, contrast_level, effect_name):
         super().__init__(master=parent)
         self.pack(expand=True, fill='both')
+        self.effect_name = effect_name
 
         effect_options = ctk.CTkOptionMenu(self,
                                            values=EFFECT_OPTIONS,
@@ -69,16 +70,38 @@ class EffectsMenu(ctk.CTkFrame):
                                            variable=effect_name)
         effect_options.pack(fill='x', padx=5, pady=5)
 
-        BlurPanel(parent=self, text='Blur', max_value=30, variable=blur_level)
-        ContrastPanel(parent=self, text='Contrast', max_value=10, variable=contrast_level)
+        self.blur_panel = BlurPanel(parent=self, text='Blur', max_value=30, variable=blur_level)
+        self.contrast_panel = ContrastPanel(parent=self, text='Contrast', max_value=10, variable=contrast_level)
 
         RevertButton(self, ((effect_name, EFFECT_OPTIONS[0]),
                             (blur_level, BLUR_DEFAULT),
                             (contrast_level, CONTRAST_DEFAULT)
                             ))
 
+    def apply_effect(self, img):
+        effect_name: str = self.effect_name.get()
+        effect_is_active: bool = effect_name != EFFECT_OPTIONS[0]
 
-class ExportMenu(ctk.CTkFrame):
+        if effect_is_active:
+            # Apply effect
+            match effect_name:
+                case 'Emboss':
+                    filter_name = ImageFilter.EMBOSS
+                case 'Find edges':
+                    filter_name = ImageFilter.FIND_EDGES
+                case 'Contour':
+                    filter_name = ImageFilter.CONTOUR
+                case 'Edge enhance':
+                    filter_name = ImageFilter.EDGE_ENHANCE
+                case _:
+                    raise Exception('Unknown filter!')
+
+            img = img.filter(filter_name)
+
+        return img
+
+
+class ExportTab(ctk.CTkFrame):
     def __init__(self, parent, apply_filters):
         super().__init__(master=parent)
         self.pack(expand=True, fill='both')
@@ -108,13 +131,3 @@ class ExportMenu(ctk.CTkFrame):
             if 'jpg' in file_name and image.mode == 'RGBA':
                 image = image.convert('RGB')
             image.save(final_address)
-
-
-class RevertButton(ctk.CTkButton):
-    def __init__(self, parent, defaults):
-        super().__init__(master=parent, text='Revert', width=150, command=lambda: self.revert(defaults))
-        self.pack(side='bottom', pady=15)
-
-    def revert(self, defaults: tuple[tuple]):
-        for variable, value in defaults:
-            variable.set(value)
