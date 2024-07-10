@@ -8,8 +8,8 @@
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/image_widgets.py" beforeDir="false" afterPath="$PROJECT_DIR$/image_widgets.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/menu.py" beforeDir="false" afterPath="$PROJECT_DIR$/tabs.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/panels.py" beforeDir="false" afterPath="$PROJECT_DIR$/panels.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tabs.py" beforeDir="false" afterPath="$PROJECT_DIR$/tabs.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -266,8 +266,27 @@
       <option name="project" value="LOCAL" />
       <updated>1720576533182</updated>
     </task>
-    <option name="localTasksCounter" value="15" />
+    <task id="LOCAL-00015" summary="v0.6">
+      <option name="closed" value="true" />
+      <created>1720585658449</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1720585658449</updated>
+    </task>
+    <option name="localTasksCounter" value="16" />
     <servers />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Initial commit" />
@@ -284,6 +303,7 @@
     <MESSAGE value="v0.5.1" />
     <MESSAGE value="v0.5.2" />
     <MESSAGE value="v0.5.3" />
-    <option name="LAST_COMMIT_MESSAGE" value="v0.5.3" />
+    <MESSAGE value="v0.6" />
+    <option name="LAST_COMMIT_MESSAGE" value="v0.6" />
   </component>
 </project>
