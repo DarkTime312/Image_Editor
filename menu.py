@@ -8,8 +8,7 @@ from image_widgets import ExportName, ExportFolder
 
 class MyTabView(ctk.CTkTabview):
     def __init__(self, master, brightness_level, vibrance_level, rotation_degree, zoom_level, blur_level,
-                 contrast_level, grey_scale_var, invert_var, effect_name, flip_option, output_img_name,
-                 output_img_extention, file_name, image_frame):
+                 contrast_level, grey_scale_var, invert_var, effect_name, flip_option, image_frame):
         super().__init__(master, fg_color=BACKGROUND_COLOR)
         self.grid(row=0, column=0, sticky='news')
 
@@ -22,7 +21,7 @@ class MyTabView(ctk.CTkTabview):
         PositionMenu(position_frm, rotation_degree, zoom_level, flip_option)
         ColorMenu(color_frm, brightness_level, vibrance_level, grey_scale_var, invert_var)
         EffectsMenu(effects_frm, blur_level, contrast_level, effect_name)
-        ExportMenu(export_frm, output_img_name, output_img_extention, file_name, image_frame)
+        ExportMenu(export_frm, image_frame)
 
 
 class PositionMenu(ctk.CTkFrame):
@@ -80,15 +79,23 @@ class EffectsMenu(ctk.CTkFrame):
 
 
 class ExportMenu(ctk.CTkFrame):
-    def __init__(self, parent, output_img_name, output_img_extention, file_name, image_frame):
+    def __init__(self, parent, image_frame):
         super().__init__(master=parent)
         self.pack(expand=True, fill='both')
-        self.file_name = file_name
-        self.save_location = ctk.StringVar()
         self.image_frame = image_frame
 
-        ExportName(self, output_img_name, output_img_extention, file_name)
+        # Output file name variables
+        self.save_location = ctk.StringVar()
+        self.output_img_name = ctk.StringVar()  # Name of the file
+        self.output_img_extension = ctk.StringVar(value='.jpg')  # extension
+        self.file_name = ctk.StringVar()  # Full file name (name + ext)
+
+        self.create_widgets()
+
+    def create_widgets(self):
+        ExportName(self, self.output_img_name, self.output_img_extension, self.file_name)
         ExportFolder(self, self.save_location)
+
         save_btn = ctk.CTkButton(self, text='Save', width=150, command=self.save_file)
         save_btn.pack(side='bottom', pady=15)
 

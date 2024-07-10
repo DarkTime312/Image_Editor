@@ -18,10 +18,11 @@ class EditorApp(ctk.CTk):
         # A flag that shows if an image is selected or not
         self.image_selected = ctk.BooleanVar(value=False)
         self.image_selected.trace('w', self.create_widgets)
+
         self.create_widgets()
 
     def create_variables(self):
-        # variables
+        # Image filter related variables
         self.rotation_degree = ctk.DoubleVar(value=ROTATE_DEFAULT)
         self.zoom_level = ctk.DoubleVar(value=ZOOM_DEFAULT)
         self.brightness_level = ctk.DoubleVar(value=BRIGHTNESS_DEFAULT)
@@ -33,17 +34,14 @@ class EditorApp(ctk.CTk):
         self.effect_name = ctk.StringVar(value=EFFECT_OPTIONS[0])
         self.flip_option = ctk.StringVar(value=FLIP_OPTIONS[0])
 
-        self.output_img_name = ctk.StringVar()
-        self.output_img_extention = ctk.IntVar(value=0)
-        self.file_name = ctk.StringVar()
 
     def set_layout(self):
         self.rowconfigure(0, weight=1)
         self.columnconfigure(0, weight=1, uniform='a')
         self.columnconfigure(1, weight=3, uniform='a')
 
-    def create_widgets(self, *args):
-        # Destroy all the widgets if they exist from before
+    def create_widgets(self, *args) -> None:
+        # Destroy all the widgets if they already exist.
         for widget in self.winfo_children():
             widget.destroy()
 
@@ -67,9 +65,6 @@ class EditorApp(ctk.CTk):
                       self.invert_var,
                       self.effect_name,
                       self.flip_option,
-                      self.output_img_name,
-                      self.output_img_extention,
-                      self.file_name,
                       self.image_frame
                       )
         else:

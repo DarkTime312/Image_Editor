@@ -6,6 +6,8 @@ from PIL import Image, ImageTk, ImageOps, ImageEnhance, ImageFilter
 from settings import *
 
 
+# Stop here
+
 class ImageFrame(ctk.CTkCanvas):
     def __init__(self, parent, image_path, image_selected, grey_scale_var,
                  invert_var, brightness_level, vibrance_level, blur_level,
@@ -232,12 +234,12 @@ class ImageFrame(ctk.CTkCanvas):
 
 
 class ExportName(ctk.CTkFrame):
-    def __init__(self, parent, output_img_name, output_img_extention, file_name):
+    def __init__(self, parent, output_img_name, output_img_extension, file_name):
         super().__init__(master=parent, fg_color=DARK_GREY)
         self.pack(padx=5, pady=5, fill='x')
         self.output_img_name = output_img_name
         self.file_name = file_name
-        self.output_img_extention = output_img_extention
+        self.output_img_extension = output_img_extension
 
         self.output_img_name.trace('w', self.update_name)
 
@@ -252,32 +254,33 @@ class ExportName(ctk.CTkFrame):
         file_name_entry = ctk.CTkEntry(self, width=180, textvariable=self.output_img_name)
         file_name_entry.grid(row=0, column=0, columnspan=2, padx=20, pady=5, sticky='ew')
 
-        self.jpg_check_box = ctk.CTkCheckBox(self, text='jpg', variable=self.output_img_extention, onvalue=0,
-                                             command=lambda: self.on_checkbox_change('jpg'))
+        self.jpg_check_box = ctk.CTkCheckBox(self, text='jpg', variable=self.output_img_extension, onvalue='.jpg',
+                                             command=lambda: self.on_checkbox_change('.jpg'))
         self.jpg_check_box.grid(row=1, column=0, padx=(40, 20))
 
-        self.png_check_box = ctk.CTkCheckBox(self, text='png', variable=self.output_img_extention, onvalue=1,
-                                             command=lambda: self.on_checkbox_change('png'))
+        self.png_check_box = ctk.CTkCheckBox(self, text='png', variable=self.output_img_extension, onvalue='.png',
+                                             command=lambda: self.on_checkbox_change('.png'))
         self.png_check_box.grid(row=1, column=1)
 
         image_name_label = ctk.CTkLabel(self, textvariable=self.file_name)
         image_name_label.grid(row=2, column=0, columnspan=2)
 
     def on_checkbox_change(self, selected_value):
-        if selected_value == "jpg":
-            self.jpg_check_box.select()
+        if selected_value == ".jpg":
             self.png_check_box.deselect()
-            self.update_name()
-        elif selected_value == "png":
+            self.jpg_check_box.select()
+
+        elif selected_value == ".png":
             self.jpg_check_box.deselect()
             self.png_check_box.select()
-            self.update_name()
+        self.update_name()
 
     def update_name(self, *args):
         user_entered_text = self.output_img_name.get()
-        user_selected_ext = 'jpg' if self.output_img_extention.get() == 0 else 'png'
+        user_selected_ext = self.output_img_extension.get()
+        # If user has entered a name
         if user_entered_text:
-            self.file_name.set(f'{user_entered_text}.{user_selected_ext}')
+            self.file_name.set(f'{user_entered_text}{user_selected_ext}')
         else:
             self.file_name.set('')
 
