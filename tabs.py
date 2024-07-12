@@ -1,3 +1,5 @@
+from tkinter import messagebox
+
 import customtkinter as ctk
 from PIL import ImageFilter
 
@@ -8,7 +10,8 @@ from panels import RotationPanel, ZoomPanel, InvertPanel, ColorSwitches, Brightn
 
 class MyTabView(ctk.CTkTabview):
     """
-    A custom tab view for a photo editing application, containing tabs for position, color, effects, and export functionalities.
+    A custom tab view for a photo editing application, containing tabs for position,
+     color, effects, and export functionalities.
 
     This class extends the customtkinter CTkTabview and organizes the user interface into four main tabs:
     - Position: Controls for rotating, zooming, and flipping the image.
@@ -21,16 +24,15 @@ class MyTabView(ctk.CTkTabview):
         super().__init__(master, fg_color=BACKGROUND_COLOR)
         self.grid(row=0, column=0, sticky='news')
 
-        # create tabs
+        # Create tabs
         position_frm = self.add("Position")
         color_frm = self.add("Color")
         effects_frm = self.add("Effects")
         export_frm = self.add("Export")
 
+        # Create frames for each tab
         self.position_tab = PositionTab(position_frm, rotation_degree, zoom_level, flip_option, original_img)
-
         self.color_tab = ColorTab(color_frm, brightness_level, vibrance_level, grey_scale_var, invert_var)
-
         self.effects_tab = EffectsTab(effects_frm, blur_level, contrast_level, effect_name)
         ExportTab(export_frm, apply_filters)
 
@@ -197,3 +199,5 @@ class ExportTab(ctk.CTkFrame):
                 image = image.convert('RGB')
             # Save the image to the final address
             image.save(final_address)
+            # Opening a messagebox indicating to the user that the image has been saved
+            messagebox.showinfo(title='File saved', message=f'{file_name} saved!')

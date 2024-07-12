@@ -15,6 +15,7 @@ class SliderPanel(ctk.CTkFrame):
     """
     def __init__(self, parent, text, max_value, variable, from_=0):
         super().__init__(master=parent, fg_color=DARK_GREY)
+        self.slide_value_indicator = None
         self.text = text
         self.max_value = max_value
         self.variable = variable

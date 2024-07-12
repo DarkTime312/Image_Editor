@@ -13,6 +13,7 @@ class ImageFrame(ctk.CTkCanvas):
     This class extends the customtkinter CTkCanvas and provides functionality to resize the image
     based on the current window dimensions while maintaining the aspect ratio.
     """
+
     def __init__(self, parent, original_img_path, image_selected):
         super().__init__(master=parent, bg=BACKGROUND_COLOR, highlightthickness=0, borderwidth=0)
         self.grid(row=0, column=1, sticky='news', padx=10, pady=10)
@@ -20,6 +21,13 @@ class ImageFrame(ctk.CTkCanvas):
 
         # Storing references
         self.original_img_path = original_img_path
+
+        # Class Attributes
+        self.y_center = None
+        self.x_center = None
+        self.resized_img = None
+        self.width = None
+        self.height = None
 
         # Create the Close image button
         CloseImageButton(self, image_selected)
@@ -80,7 +88,7 @@ class ImageFrame(ctk.CTkCanvas):
         """
         return self.x_center, self.y_center
 
-    def get_resize_img(self) -> Image:
+    def get_resized_img(self) -> Image:
         """
         Returns the resized image.
 
@@ -95,15 +103,10 @@ class ImportImage(ctk.CTkButton):
 
     This class extends the customtkinter CTkButton and provides functionality to open a file dialog
     for selecting an image file from the file system. Once an image is selected, it updates the
-    image_selected variable and stores the image path.
+    `image_selected` variable and stores the image path.
     """
-    def __init__(self, parent, image_selected):
-        """
-        Initializes the ImportImage button with the given parameters and places it in the center of the parent widget.
 
-        :param parent: The parent widget.
-        :param image_selected: A variable indicating whether an image is selected.
-        """
+    def __init__(self, parent, image_selected):
         super().__init__(master=parent, text='Open image', width=150, command=self.select_image)
         self.image_selected = image_selected
         self.image_path = None
@@ -146,8 +149,8 @@ class ImportImage(ctk.CTkButton):
                 ("XPM Files", "*.xpm")
             ]
         )
-
-        if file_path:  # If a file was selected
+        # If a file was selected
+        if file_path:
             # Open the selected image file and store the reference in image_path
             self.image_path = Image.open(file_path)
             # Set the image_selected variable to True to indicate an image has been selected
@@ -174,12 +177,6 @@ class CloseImageButton(ctk.CTkButton):
     """
 
     def __init__(self, parent, image_selected):
-        """
-        Initializes the CloseImageButton with the given parameters and places it at the top-right corner of the parent widget.
-
-        :param parent: The parent widget.
-        :param image_selected: A variable indicating whether an image is selected.
-        """
         super().__init__(master=parent,
                          text='X',
                          width=20,
@@ -189,7 +186,7 @@ class CloseImageButton(ctk.CTkButton):
                          text_color=WHITE,
                          command=self.close_image)
         self.image_selected = image_selected
-        # Place the button at the top-right corner of the parent widget
+        # Place the button in the top-right corner of the parent widget
         self.place(relx=0.99, rely=0.01, anchor='ne')
 
     def close_image(self) -> None:

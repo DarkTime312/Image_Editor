@@ -9,6 +9,22 @@ from tabs import MyTabView
 class EditorApp(ctk.CTk):
     def __init__(self):
         super().__init__()
+        # Class attributes
+        self.image_tk = None
+        self.flip_option = None
+        self.effect_name = None
+        self.invert_var = None
+        self.grey_scale_var = None
+        self.contrast_level = None
+        self.blur_level = None
+        self.vibrance_level = None
+        self.zoom_level = None
+        self.brightness_level = None
+        self.rotation_degree = None
+        self.tab_view = None
+        self.image_frame = None
+        self.original_img_path = None
+        self.imported_image = None
 
         # Force dark mode
         ctk.set_appearance_mode('dark')
@@ -28,45 +44,6 @@ class EditorApp(ctk.CTk):
 
         # Initialize the app for the first time
         self.initialize()
-
-    def create_variables(self) -> None:
-        """
-        Creates the necessary tkinter variables and passes them default
-        values from settings module.
-
-        It also binds the variables to the apply_filters function.
-
-        :return: None
-        """
-        self.rotation_degree = ctk.DoubleVar(value=ROTATE_DEFAULT)
-        self.zoom_level = ctk.DoubleVar(value=ZOOM_DEFAULT)
-        self.brightness_level = ctk.DoubleVar(value=BRIGHTNESS_DEFAULT)
-        self.vibrance_level = ctk.DoubleVar(value=VIBRANCE_DEFAULT)
-        self.blur_level = ctk.DoubleVar(value=BLUR_DEFAULT)
-        self.contrast_level = ctk.DoubleVar(value=CONTRAST_DEFAULT)
-        self.grey_scale_var = ctk.BooleanVar(value=GRAYSCALE_DEFAULT)
-        self.invert_var = ctk.BooleanVar(value=INVERT_DEFAULT)
-        self.effect_name = ctk.StringVar(value=EFFECT_OPTIONS[0])
-        self.flip_option = ctk.StringVar(value=FLIP_OPTIONS[0])
-
-        # Binding the variables
-        variables = (self.grey_scale_var, self.invert_var, self.brightness_level, self.vibrance_level,
-                     self.blur_level, self.contrast_level, self.effect_name, self.flip_option,
-                     self.rotation_degree, self.zoom_level)
-        for variable in variables:
-            variable.trace('w', self.apply_filters)
-
-    def set_layout(self) -> None:
-        """
-        Sets the grid layout for the widgets.
-        It only runs when user already selected an image.
-
-        :return: None
-        """
-        self.rowconfigure(0, weight=1)
-
-        self.columnconfigure(0, weight=1, uniform='a')
-        self.columnconfigure(1, weight=3, uniform='a')
 
     def initialize(self, *args) -> None:
         """
@@ -112,9 +89,49 @@ class EditorApp(ctk.CTk):
                                       self.apply_filters,
                                       self.original_img_path)
 
-        else:  # If the user hasn't selected any image yet
+        # If the user hasn't selected any image yet
+        else:
             # Create the import image button to allow the user to select an image
             self.imported_image = ImportImage(self, self.image_selected)
+
+    def create_variables(self) -> None:
+        """
+        Creates the necessary tkinter variables and passes them default
+        values from settings module.
+
+        It also binds the variables to the apply_filters function.
+
+        :return: None
+        """
+        self.rotation_degree = ctk.DoubleVar(value=ROTATE_DEFAULT)
+        self.zoom_level = ctk.DoubleVar(value=ZOOM_DEFAULT)
+        self.brightness_level = ctk.DoubleVar(value=BRIGHTNESS_DEFAULT)
+        self.vibrance_level = ctk.DoubleVar(value=VIBRANCE_DEFAULT)
+        self.blur_level = ctk.DoubleVar(value=BLUR_DEFAULT)
+        self.contrast_level = ctk.DoubleVar(value=CONTRAST_DEFAULT)
+        self.grey_scale_var = ctk.BooleanVar(value=GRAYSCALE_DEFAULT)
+        self.invert_var = ctk.BooleanVar(value=INVERT_DEFAULT)
+        self.effect_name = ctk.StringVar(value=EFFECT_OPTIONS[0])
+        self.flip_option = ctk.StringVar(value=FLIP_OPTIONS[0])
+
+        # Binding the variables
+        variables = (self.grey_scale_var, self.invert_var, self.brightness_level, self.vibrance_level,
+                     self.blur_level, self.contrast_level, self.effect_name, self.flip_option,
+                     self.rotation_degree, self.zoom_level)
+        for variable in variables:
+            variable.trace('w', self.apply_filters)
+
+    def set_layout(self) -> None:
+        """
+        Sets the grid layout for the widgets.
+        It only runs when user already selected an image.
+
+        :return: None
+        """
+        self.rowconfigure(0, weight=1)
+
+        self.columnconfigure(0, weight=1, uniform='a')
+        self.columnconfigure(1, weight=3, uniform='a')
 
     def apply_filters(self, *args, export=False) -> Image:
         """
@@ -132,7 +149,7 @@ class EditorApp(ctk.CTk):
         :return: The edited PIL Image object.
         """
         # Get the original image path if exporting, otherwise get the resized image for display
-        edited_img = self.original_img_path if export else self.image_frame.get_resize_img()
+        edited_img = self.original_img_path if export else self.image_frame.get_resized_img()
 
         # Apply rotation to the image
         edited_img = self.get_rotation_panel().apply_rotation(edited_img)
