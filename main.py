@@ -142,25 +142,25 @@ class EditorApp(ctk.CTk):
         edited_img = self.original_img_path if export else self.image_frame.get_resized_img()
 
         # Apply rotation to the image
-        edited_img = self.get_rotation_panel().apply_rotation(edited_img)
+        edited_img = self.rotation_panel.apply_rotation(edited_img)
         # Apply zoom to the image
-        edited_img = self.get_zoom_panel().apply_zoom(edited_img, export=export)
+        edited_img = self.zoom_panel.apply_zoom(edited_img, export=export)
         # Apply flip (invert) transformations to the image
-        edited_img = self.get_invert_panel().apply_flip(edited_img)
+        edited_img = self.invert_panel.apply_flip(edited_img)
         # Apply grayscale transformation to the image
-        edited_img = self.get_color_switches().apply_black_and_white(edited_img)
+        edited_img = self.color_switches.apply_black_and_white(edited_img)
         # Apply color inversion to the image
-        edited_img = self.get_color_switches().apply_color_inversion(edited_img)
+        edited_img = self.color_switches.apply_color_inversion(edited_img)
         # Apply brightness adjustment to the image
-        edited_img = self.get_brightness_panel().apply_brightness(edited_img)
+        edited_img = self.brightness_panel.apply_brightness(edited_img)
         # Apply vibrance adjustment to the image
-        edited_img = self.get_vibrance_panel().apply_vibrance(edited_img)
+        edited_img = self.vibrance_panel.apply_vibrance(edited_img)
         # Apply contrast adjustment to the image
-        edited_img = self.get_contrast_panel().apply_contrast(edited_img)
+        edited_img = self.contrast_panel.apply_contrast(edited_img)
         # Apply blur effect to the image
-        edited_img = self.get_blur_panel().apply_blur(edited_img)
+        edited_img = self.blur_panel.apply_blur(edited_img)
         # Apply additional effects to the image
-        edited_img = self.get_effect_tab().apply_effect(edited_img)
+        edited_img = self.effect_tab.apply_effect(edited_img)
 
         # If exporting the image, resize it for display purposes
         if export:
@@ -178,55 +178,64 @@ class EditorApp(ctk.CTk):
         # Return the edited image, useful when exporting the image
         return edited_img
 
-    def get_rotation_panel(self):
+    @property
+    def rotation_panel(self):
         """
         Retrieves the rotation panel from the position tab.
         """
         return self.tab_view.position_tab.rotation_menu
 
-    def get_zoom_panel(self):
+    @property
+    def zoom_panel(self):
         """
         Retrieves the zoom panel from the position tab.
         """
         return self.tab_view.position_tab.zoom_panel
 
-    def get_invert_panel(self):
+    @property
+    def invert_panel(self):
         """
         Retrieves the invert (flip) panel from the position tab.
         """
         return self.tab_view.position_tab.invert_panel
 
-    def get_color_switches(self):
+    @property
+    def color_switches(self):
         """
         Retrieves the color switches panel from the color tab.
         """
         return self.tab_view.color_tab.color_switches
 
-    def get_brightness_panel(self):
+    @property
+    def brightness_panel(self):
         """
         Retrieves the brightness panel from the color tab.
         """
         return self.tab_view.color_tab.brightness_panel
 
-    def get_vibrance_panel(self):
+    @property
+    def vibrance_panel(self):
         """
         Retrieves the vibrance panel from the color tab.
         """
         return self.tab_view.color_tab.vibrance_panel
 
-    def get_contrast_panel(self):
+    @property
+    def contrast_panel(self):
         """
         Retrieves the contrast panel from the effects tab.
         """
         return self.tab_view.effects_tab.contrast_panel
 
-    def get_blur_panel(self):
+    @property
+    def blur_panel(self):
         """
         Retrieves the blur panel from the effects tab.
         """
         return self.tab_view.effects_tab.blur_panel
 
-    def get_effect_tab(self):
+    @property
+    def effect_tab(self):
         """
         Retrieves the effect tab from the effects tab.
         """

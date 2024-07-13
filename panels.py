@@ -13,6 +13,7 @@ class SliderPanel(ctk.CTkFrame):
     This class extends the customtkinter CTkFrame and provides a slider to adjust a value,
     and a label to display the current value of the slider.
     """
+
     def __init__(self, parent, text, max_value, variable, from_=0):
         super().__init__(master=parent, fg_color=DARK_GREY)
         self.slide_value_indicator = None
@@ -24,6 +25,8 @@ class SliderPanel(ctk.CTkFrame):
 
         self.set_layout()
         self.create_widgets()
+        self.variable.trace('w', self.update_label)
+        self.update_label()
 
     def set_layout(self):
         """
@@ -41,7 +44,7 @@ class SliderPanel(ctk.CTkFrame):
         title_label.grid(row=0, column=0, sticky='w', padx=5, pady=5)
 
         # Create and place the label to display the slider value
-        self.slide_value_indicator = ctk.CTkLabel(self, text=self.variable.get())
+        self.slide_value_indicator = ctk.CTkLabel(self)
         self.slide_value_indicator.grid(row=0, column=1, sticky='e', padx=5, pady=5)
 
         # Create and place the slider
@@ -50,17 +53,17 @@ class SliderPanel(ctk.CTkFrame):
                                to=self.max_value,
                                fg_color=SLIDER_BG,
                                variable=self.variable,
-                               command=self.update_label)
+                               )
         slider.grid(row=1, column=0, columnspan=2, sticky='ew', padx=5, pady=5)
 
-    def update_label(self, value):
+    def update_label(self, *args):
         """
         Updates the label to display the current value of the slider.
 
-        :param value: Current value passed by slider.
+        :param args: Additional arguments (not used).
         """
 
-        rounded_value: str = str(round(value, 2))
+        rounded_value: str = str(round(self.variable.get(), 2))
         self.slide_value_indicator.configure(text=rounded_value)
 
 
@@ -97,6 +100,7 @@ class ZoomPanel(SliderPanel):
 
     This class extends the SliderPanel and provides functionality to apply zoom to an image.
     """
+
     def __init__(self, org_img, **kwargs):
         """
         Initializes the ZoomPanel with the given parameters and sets up the layout and widgets.
@@ -148,6 +152,7 @@ class InvertPanel(ctk.CTkFrame):
 
     This class extends the customtkinter CTkFrame and provides functionality to flip the image.
     """
+
     def __init__(self, parent, flip_option):
         super().__init__(master=parent, fg_color=DARK_GREY)
         self.pack(fill='x', padx=5, pady=5)
@@ -206,6 +211,7 @@ class ColorSwitches(ctk.CTkFrame):
     This class extends the customtkinter CTkFrame and provides functionality to apply black-and-white
     and color inversion effects to an image.
     """
+
     def __init__(self, parent, grey_scale_var, invert_var):
         """
         Initializes the ColorSwitches panel with the given parameters and sets up the layout and widgets.
@@ -397,6 +403,7 @@ class ExportName(ctk.CTkFrame):
     This class extends the customtkinter CTkFrame and provides functionality to set the export file name
     and extension for the image.
     """
+
     def __init__(self, parent, output_img_name, output_img_extension, file_name):
         """
         Initializes the ExportName panel with the given parameters and sets up the layout and widgets.
@@ -489,6 +496,7 @@ class ExportFolder(ctk.CTkFrame):
     This class extends the customtkinter CTkFrame and provides functionality to select a folder
     where the image will be saved.
     """
+
     def __init__(self, parent, save_location):
         """
         Initializes the ExportFolder panel with the given parameters and sets up the layout and widgets.
@@ -537,20 +545,6 @@ class ExportFolder(ctk.CTkFrame):
             self.save_location.set(save_folder)
 
 
-def revert(defaults: dict) -> None:
-    """
-    Reverts a set of variables to their default values.
-
-    This function iterates over a tuple of tuples, where each inner tuple contains a variable and its default value.
-    It sets each variable to its corresponding default value.
-
-    :param defaults: A tuple of tuples, where each inner tuple contains a variable and its default value.
-    """
-
-    for variable, default in defaults.values():
-        variable.set(default)
-
-
 class RevertButton(ctk.CTkButton):
     """
     A button that reverts variables to their default values when clicked.
@@ -558,6 +552,19 @@ class RevertButton(ctk.CTkButton):
     This class extends the customtkinter CTkButton and provides a button that, when clicked,
     reverts a set of variables to their default values.
     """
+
     def __init__(self, parent, defaults: dict):
-        super().__init__(master=parent, text='Revert', width=150, command=lambda: revert(defaults))
+        super().__init__(master=parent, text='Revert', width=150, command=self.revert)
+        self.defaults = defaults
         self.pack(side='bottom', pady=15)
+
+    def revert(self) -> None:
+        """
+        Reverts a set of variables to their default values.
+
+        This function iterates over a dictionary, where each value contains a variable and its default value.
+        It then sets each variable to its corresponding default value.
+
+        """
+        for variable, default in self.defaults.values():
+            variable.set(default)
