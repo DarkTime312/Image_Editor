@@ -415,6 +415,8 @@ class ExportName(ctk.CTkFrame):
         """
 
         super().__init__(master=parent, fg_color=DARK_GREY)
+        self.png_check_box = None
+        self.jpg_check_box = None
         self.pack(padx=5, pady=5, fill='x')
 
         self.output_img_name = output_img_name
@@ -445,46 +447,42 @@ class ExportName(ctk.CTkFrame):
 
         # Create and place the checkbox for the .jpg extension
         self.jpg_check_box = ctk.CTkCheckBox(self, text='jpg', variable=self.output_img_extension, onvalue='.jpg',
-                                             command=lambda: self.on_checkbox_change('.jpg'))
+                                             offvalue='.png', command=lambda: self.on_click('.jpg'))
         self.jpg_check_box.grid(row=1, column=0, padx=(40, 20))
 
         # Create and place the checkbox for the .png extension
         self.png_check_box = ctk.CTkCheckBox(self, text='png', variable=self.output_img_extension, onvalue='.png',
-                                             command=lambda: self.on_checkbox_change('.png'))
+                                             offvalue='.jpg', command=lambda: self.on_click('.png'))
         self.png_check_box.grid(row=1, column=1)
 
         # Create and place the label to display the full file name
         image_name_label = ctk.CTkLabel(self, textvariable=self.file_name)
         image_name_label.grid(row=2, column=0, columnspan=2)
 
-    def on_checkbox_change(self, selected_value):
+    def on_click(self, selected_value):
         """
-        Handles the checkbox change event to ensure only one extension is selected at a time.
+        Updates the `output_img_extension` variable with the selected value.
 
         :param selected_value: The selected extension value ('.jpg' or '.png').
         """
-
-        if selected_value == ".jpg":
-            self.png_check_box.deselect()
-            self.jpg_check_box.select()
-
-        elif selected_value == ".png":
-            self.jpg_check_box.deselect()
-            self.png_check_box.select()
+        self.output_img_extension.set(selected_value)
         self.update_name()
 
     def update_name(self, *args):
         """
         Updates the full file name based on the user-entered name and selected extension.
 
+        It replaces any white space in the name with underscore.
+
         :param args: Additional arguments (not used).
         """
 
-        user_entered_text = self.output_img_name.get()
-        user_selected_ext = self.output_img_extension.get()
-        # If user has entered a name
-        if user_entered_text:
-            self.file_name.set(f'{user_entered_text}{user_selected_ext}')
+        user_entered_text: str = self.output_img_name.get()
+        user_selected_ext: str = self.output_img_extension.get()
+        # If user has entered a name and if it's not just white space
+        if user_entered_text and not user_entered_text.isspace():
+            full_file_name: str = user_entered_text + user_selected_ext
+            self.file_name.set(full_file_name.replace(' ', '_'))
         else:
             self.file_name.set('')
 
@@ -506,8 +504,9 @@ class ExportFolder(ctk.CTkFrame):
         """
 
         super().__init__(master=parent, fg_color=DARK_GREY)
-        self.pack(padx=5, pady=5, fill='x')
+        self.save_folder_entry = None
         self.save_location = save_location
+        self.pack(padx=5, pady=5, fill='x')
 
         self.set_layout()
         self.create_widgets()
