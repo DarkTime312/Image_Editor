@@ -10,17 +10,8 @@ class EditorApp(ctk.CTk):
     def __init__(self):
         super().__init__()
         # Class attributes
+        self.variables_dict = None
         self.image_tk = None
-        self.flip_option = None
-        self.effect_name = None
-        self.invert_var = None
-        self.grey_scale_var = None
-        self.contrast_level = None
-        self.blur_level = None
-        self.vibrance_level = None
-        self.zoom_level = None
-        self.brightness_level = None
-        self.rotation_degree = None
         self.tab_view = None
         self.image_frame = None
         self.original_img_path = None
@@ -76,16 +67,7 @@ class EditorApp(ctk.CTk):
 
             # Create a MyTabView widget to hold the editing controls
             self.tab_view = MyTabView(self,
-                                      self.brightness_level,
-                                      self.vibrance_level,
-                                      self.rotation_degree,
-                                      self.zoom_level,
-                                      self.blur_level,
-                                      self.contrast_level,
-                                      self.grey_scale_var,
-                                      self.invert_var,
-                                      self.effect_name,
-                                      self.flip_option,
+                                      self.variables_dict,
                                       self.apply_filters,
                                       self.original_img_path)
 
@@ -103,23 +85,31 @@ class EditorApp(ctk.CTk):
 
         :return: None
         """
-        self.rotation_degree = ctk.DoubleVar(value=ROTATE_DEFAULT)
-        self.zoom_level = ctk.DoubleVar(value=ZOOM_DEFAULT)
-        self.brightness_level = ctk.DoubleVar(value=BRIGHTNESS_DEFAULT)
-        self.vibrance_level = ctk.DoubleVar(value=VIBRANCE_DEFAULT)
-        self.blur_level = ctk.DoubleVar(value=BLUR_DEFAULT)
-        self.contrast_level = ctk.DoubleVar(value=CONTRAST_DEFAULT)
-        self.grey_scale_var = ctk.BooleanVar(value=GRAYSCALE_DEFAULT)
-        self.invert_var = ctk.BooleanVar(value=INVERT_DEFAULT)
-        self.effect_name = ctk.StringVar(value=EFFECT_OPTIONS[0])
-        self.flip_option = ctk.StringVar(value=FLIP_OPTIONS[0])
+        self.variables_dict = {
+            'position': {
+                'rotation': (ctk.DoubleVar(), ROTATE_DEFAULT),
+                'zoom': (ctk.DoubleVar(), ZOOM_DEFAULT),
+                'flip': (ctk.StringVar(), FLIP_OPTIONS[0])
+            },
+            'color': {
+                'grey_scale': (ctk.BooleanVar(), GRAYSCALE_DEFAULT),
+                'invert': (ctk.BooleanVar(), INVERT_DEFAULT),
+                'brightness': (ctk.DoubleVar(), BRIGHTNESS_DEFAULT),
+                'vibrance': (ctk.DoubleVar(), VIBRANCE_DEFAULT)
 
-        # Binding the variables
-        variables = (self.grey_scale_var, self.invert_var, self.brightness_level, self.vibrance_level,
-                     self.blur_level, self.contrast_level, self.effect_name, self.flip_option,
-                     self.rotation_degree, self.zoom_level)
-        for variable in variables:
-            variable.trace('w', self.apply_filters)
+            },
+            'effects': {
+                'effect': (ctk.StringVar(), EFFECT_OPTIONS[0]),
+                'blur': (ctk.DoubleVar(), BLUR_DEFAULT),
+                'contrast': (ctk.DoubleVar(), CONTRAST_DEFAULT)
+            }
+        }
+
+        # Set the default value and tracing for each variable
+        for panels in self.variables_dict.values():
+            for variable, default_value in panels.values():
+                variable.set(default_value)
+                variable.trace('w', self.apply_filters)
 
     def set_layout(self) -> None:
         """

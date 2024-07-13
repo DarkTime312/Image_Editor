@@ -24,8 +24,6 @@ class SliderPanel(ctk.CTkFrame):
 
         self.set_layout()
         self.create_widgets()
-        self.variable.trace('w', self.update_label)
-        self.update_label()
 
     def set_layout(self):
         """
@@ -43,7 +41,7 @@ class SliderPanel(ctk.CTkFrame):
         title_label.grid(row=0, column=0, sticky='w', padx=5, pady=5)
 
         # Create and place the label to display the slider value
-        self.slide_value_indicator = ctk.CTkLabel(self)
+        self.slide_value_indicator = ctk.CTkLabel(self, text=self.variable.get())
         self.slide_value_indicator.grid(row=0, column=1, sticky='e', padx=5, pady=5)
 
         # Create and place the slider
@@ -51,18 +49,19 @@ class SliderPanel(ctk.CTkFrame):
                                from_=self.from_,
                                to=self.max_value,
                                fg_color=SLIDER_BG,
-                               variable=self.variable)
+                               variable=self.variable,
+                               command=self.update_label)
         slider.grid(row=1, column=0, columnspan=2, sticky='ew', padx=5, pady=5)
 
-    def update_label(self, *args):
+    def update_label(self, value):
         """
         Updates the label to display the current value of the slider.
 
-        :param args: Additional arguments (not used).
+        :param value: Current value passed by slider.
         """
 
-        new_value: str = str(round(self.variable.get(), 2))
-        self.slide_value_indicator.configure(text=new_value)
+        rounded_value: str = str(round(value, 2))
+        self.slide_value_indicator.configure(text=rounded_value)
 
 
 class RotationPanel(SliderPanel):
@@ -538,7 +537,7 @@ class ExportFolder(ctk.CTkFrame):
             self.save_location.set(save_folder)
 
 
-def revert(defaults: tuple[tuple]) -> None:
+def revert(defaults: dict) -> None:
     """
     Reverts a set of variables to their default values.
 
@@ -548,8 +547,8 @@ def revert(defaults: tuple[tuple]) -> None:
     :param defaults: A tuple of tuples, where each inner tuple contains a variable and its default value.
     """
 
-    for variable, value in defaults:
-        variable.set(value)
+    for variable, default in defaults.values():
+        variable.set(default)
 
 
 class RevertButton(ctk.CTkButton):
@@ -559,6 +558,6 @@ class RevertButton(ctk.CTkButton):
     This class extends the customtkinter CTkButton and provides a button that, when clicked,
     reverts a set of variables to their default values.
     """
-    def __init__(self, parent, defaults):
+    def __init__(self, parent, defaults: dict):
         super().__init__(master=parent, text='Revert', width=150, command=lambda: revert(defaults))
         self.pack(side='bottom', pady=15)

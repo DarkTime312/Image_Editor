@@ -19,8 +19,7 @@ class MyTabView(ctk.CTkTabview):
     - Effects: Controls for applying blur, contrast, and various image effects.
     - Export: Controls for exporting the edited image, including setting the file name and save location.
     """
-    def __init__(self, master, brightness_level, vibrance_level, rotation_degree, zoom_level, blur_level,
-                 contrast_level, grey_scale_var, invert_var, effect_name, flip_option, apply_filters, original_img):
+    def __init__(self, master, variables_dict, apply_filters, original_img):
         super().__init__(master, fg_color=BACKGROUND_COLOR)
         self.grid(row=0, column=0, sticky='news')
 
@@ -31,9 +30,9 @@ class MyTabView(ctk.CTkTabview):
         export_frm = self.add("Export")
 
         # Create frames for each tab
-        self.position_tab = PositionTab(position_frm, rotation_degree, zoom_level, flip_option, original_img)
-        self.color_tab = ColorTab(color_frm, brightness_level, vibrance_level, grey_scale_var, invert_var)
-        self.effects_tab = EffectsTab(effects_frm, blur_level, contrast_level, effect_name)
+        self.position_tab = PositionTab(position_frm, variables_dict['position'], original_img)
+        self.color_tab = ColorTab(color_frm, variables_dict['color'])
+        self.effects_tab = EffectsTab(effects_frm, variables_dict['effects'])
         ExportTab(export_frm, apply_filters)
 
 
@@ -44,18 +43,15 @@ class PositionTab(ctk.CTkFrame):
     This class extends the customtkinter CTkFrame and provides controls for rotating, zooming, and flipping an image.
     It also includes a revert button to reset these adjustments to their default values.
     """
-    def __init__(self, parent, rotation_degree, zoom_level, flip_option, original_img):
+    def __init__(self, parent, position_dict, original_img):
         super().__init__(master=parent)
         self.pack(expand=True, fill='both', padx=5)
 
-        self.rotation_menu = RotationPanel(parent=self, text='Rotation', max_value=360, variable=rotation_degree)
-        self.zoom_panel = ZoomPanel(parent=self, text='Zoom', max_value=2, variable=zoom_level, org_img=original_img)
-        self.invert_panel = InvertPanel(self, flip_option)
+        self.rotation_menu = RotationPanel(parent=self, text='Rotation', max_value=360, variable=position_dict['rotation'][0])
+        self.zoom_panel = ZoomPanel(parent=self, text='Zoom', max_value=2, variable=position_dict['zoom'][0], org_img=original_img)
+        self.invert_panel = InvertPanel(self, position_dict['flip'][0])
 
-        RevertButton(self, ((rotation_degree, ROTATE_DEFAULT),
-                            (zoom_level, ZOOM_DEFAULT),
-                            (flip_option, FLIP_OPTIONS[0])
-                            ))
+        RevertButton(self, position_dict)
 
 
 class ColorTab(ctk.CTkFrame):
@@ -65,19 +61,15 @@ class ColorTab(ctk.CTkFrame):
     This class extends the customtkinter CTkFrame and provides controls for adjusting brightness, vibrance,
     grayscale, and inversion of an image. It also includes a revert button to reset these adjustments to their default values.
     """
-    def __init__(self, parent, brightness_level, vibrance_level, grey_scale_var, invert_var):
+    def __init__(self, parent, color_dict):
         super().__init__(master=parent)
         self.pack(expand=True, fill='both')
 
-        self.color_switches = ColorSwitches(self, grey_scale_var, invert_var)
-        self.brightness_panel = BrightnessPanel(parent=self, text='Brightness', max_value=5, variable=brightness_level)
-        self.vibrance_panel = VibrancePanel(parent=self, text='Vibrance', max_value=5, variable=vibrance_level)
+        self.color_switches = ColorSwitches(self, color_dict['grey_scale'][0], color_dict['invert'][0])
+        self.brightness_panel = BrightnessPanel(parent=self, text='Brightness', max_value=5, variable=color_dict['brightness'][0])
+        self.vibrance_panel = VibrancePanel(parent=self, text='Vibrance', max_value=5, variable=color_dict['vibrance'][0])
 
-        RevertButton(self, ((grey_scale_var, GRAYSCALE_DEFAULT),
-                            (invert_var, INVERT_DEFAULT),
-                            (brightness_level, BRIGHTNESS_DEFAULT),
-                            (vibrance_level, VIBRANCE_DEFAULT)
-                            ))
+        RevertButton(self, color_dict)
 
 
 class EffectsTab(ctk.CTkFrame):
@@ -87,10 +79,10 @@ class EffectsTab(ctk.CTkFrame):
     This class extends the customtkinter CTkFrame and provides controls for applying blur, contrast, and various image effects.
     It also includes a revert button to reset these adjustments to their default values.
     """
-    def __init__(self, parent, blur_level, contrast_level, effect_name):
+    def __init__(self, parent, effects_dict):
         super().__init__(master=parent)
         self.pack(expand=True, fill='both')
-        self.effect_name = effect_name
+        self.effect_name = effects_dict['effect'][0]
 
         effect_options = ctk.CTkOptionMenu(self,
                                            values=EFFECT_OPTIONS,
@@ -98,18 +90,15 @@ class EffectsTab(ctk.CTkFrame):
                                            dropdown_fg_color=DROPDOWN_MENU_COLOR,
                                            button_color=DROPDOWN_MAIN_COLOR,
                                            button_hover_color=DROPDOWN_HOVER_COLOR,
-                                           variable=effect_name,
+                                           variable=self.effect_name,
                                            )
         effect_options.pack(fill='x', padx=5, pady=5)
 
-        self.blur_panel = BlurPanel(parent=self, text='Blur', max_value=30, variable=blur_level)
+        self.blur_panel = BlurPanel(parent=self, text='Blur', max_value=30, variable=effects_dict['blur'][0])
 
-        self.contrast_panel = ContrastPanel(parent=self, text='Contrast', max_value=10, variable=contrast_level)
+        self.contrast_panel = ContrastPanel(parent=self, text='Contrast', max_value=10, variable=effects_dict['contrast'][0])
 
-        RevertButton(self, ((effect_name, EFFECT_OPTIONS[0]),
-                            (blur_level, BLUR_DEFAULT),
-                            (contrast_level, CONTRAST_DEFAULT)
-                            ))
+        RevertButton(self, effects_dict)
 
     def apply_effect(self, img):
         """
