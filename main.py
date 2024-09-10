@@ -79,7 +79,7 @@ class EditorApp(ctk.CTk):
     def create_variables(self) -> None:
         """
         Creates the necessary tkinter variables and passes them default
-        values from settings module.
+        values from data module.
 
         It also binds the variables to the apply_filters function.
 

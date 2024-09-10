@@ -5,9 +5,20 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="2e61ce0c-060f-4fca-81c8-bb8576ec8ba6" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/pyside_version/MVC/controller.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/pyside_version/MVC/model.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/pyside_version/MVC/view.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/pyside_version/assets/checkbox-checked-pressed.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/pyside_version/assets/checkbox-pressed.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/pyside_version/assets/checkbox.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/pyside_version/assets/checkbox_unchecked.svg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/pyside_version/data/TrimmablePainterPath.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/pyside_version/data/animated_one.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/pyside_version/data/animated_toggle.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/pyside_version/data/mark_widget.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/pyside_version/main.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/panels.py" beforeDir="false" afterPath="$PROJECT_DIR$/panels.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -45,23 +56,30 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;Python.image_widgets.executor&quot;: &quot;Run&quot;,
-    &quot;Python.main.executor&quot;: &quot;Run&quot;,
-    &quot;Python.mmm.executor&quot;: &quot;Run&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
-    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/rozes/PycharmProjects/Image_Editor&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Python.image_widgets.executor": "Run",
+    "Python.main (1).executor": "Run",
+    "Python.main.executor": "Run",
+    "Python.mmm.executor": "Run",
+    "Python.view.executor": "Run",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "git-widget-placeholder": "master",
+    "ignore.virus.scanning.warn.message": "true",
+    "last_opened_file_path": "C:/Users/rozes/PycharmProjects/Image_Editor/pyside_version/assets"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\rozes\PycharmProjects\Image_Editor\pyside_version\assets" />
       <recent name="C:\Users\rozes\PycharmProjects\Image_Editor" />
     </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\rozes\PycharmProjects\Image_Editor\pyside_version\data" />
+      <recent name="C:\Users\rozes\PycharmProjects\Image_Editor\pyside_version\MVC" />
+    </key>
   </component>
-  <component name="RunManager" selected="Python.main">
+  <component name="RunManager" selected="Python.main (1)">
     <configuration name="image_widgets" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="Image_Editor" />
       <option name="ENV_FILES" value="" />
@@ -76,6 +94,28 @@
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/image_widgets.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="main (1)" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="Image_Editor" />
+      <option name="ENV_FILES" value="" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/pyside_version" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/pyside_version/main.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -128,9 +168,33 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
+    <configuration name="view" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="Image_Editor" />
+      <option name="ENV_FILES" value="" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/pyside_version/MVC" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/pyside_version/MVC/view.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Python.main (1)" />
         <item itemvalue="Python.main" />
+        <item itemvalue="Python.view" />
         <item itemvalue="Python.image_widgets" />
         <item itemvalue="Python.mmm" />
       </list>
@@ -296,7 +360,23 @@
       <option name="project" value="LOCAL" />
       <updated>1720837519361</updated>
     </task>
-    <option name="localTasksCounter" value="19" />
+    <task id="LOCAL-00019" summary="v0.7.3">
+      <option name="closed" value="true" />
+      <created>1720849571480</created>
+      <option name="number" value="00019" />
+      <option name="presentableId" value="LOCAL-00019" />
+      <option name="project" value="LOCAL" />
+      <updated>1720849571480</updated>
+    </task>
+    <task id="LOCAL-00020" summary="v0.8">
+      <option name="closed" value="true" />
+      <created>1720860432556</created>
+      <option name="number" value="00020" />
+      <option name="presentableId" value="LOCAL-00020" />
+      <option name="project" value="LOCAL" />
+      <updated>1720860432556</updated>
+    </task>
+    <option name="localTasksCounter" value="21" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -329,6 +409,8 @@
     <MESSAGE value="v0.7" />
     <MESSAGE value="v0.7.1" />
     <MESSAGE value="v0.7.2" />
-    <option name="LAST_COMMIT_MESSAGE" value="v0.7.2" />
+    <MESSAGE value="v0.7.3" />
+    <MESSAGE value="v0.8" />
+    <option name="LAST_COMMIT_MESSAGE" value="v0.8" />
   </component>
 </project>
