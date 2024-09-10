@@ -5,20 +5,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="2e61ce0c-060f-4fca-81c8-bb8576ec8ba6" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/pyside_version/MVC/controller.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/pyside_version/MVC/model.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/pyside_version/MVC/view.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/pyside_version/assets/checkbox-checked-pressed.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/pyside_version/assets/checkbox-pressed.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/pyside_version/assets/checkbox.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/pyside_version/assets/checkbox_unchecked.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/pyside_version/data/TrimmablePainterPath.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/pyside_version/data/animated_one.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/pyside_version/data/animated_toggle.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/pyside_version/data/mark_widget.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/pyside_version/main.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pyside_version/MVC/controller.py" beforeDir="false" afterPath="$PROJECT_DIR$/pyside_version/MVC/controller.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pyside_version/MVC/model.py" beforeDir="false" afterPath="$PROJECT_DIR$/pyside_version/MVC/model.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pyside_version/MVC/view.py" beforeDir="false" afterPath="$PROJECT_DIR$/pyside_version/MVC/view.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pyside_version/data/animated_one.py" beforeDir="false" afterPath="$PROJECT_DIR$/pyside_version/data/animated_one.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pyside_version/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/pyside_version/main.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -58,9 +50,10 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
+    "Python.animated_one.executor": "Run",
     "Python.image_widgets.executor": "Run",
     "Python.main (1).executor": "Run",
-    "Python.main.executor": "Run",
+    "Python.main.executor": "Debug",
     "Python.mmm.executor": "Run",
     "Python.view.executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
@@ -80,6 +73,28 @@
     </key>
   </component>
   <component name="RunManager" selected="Python.main (1)">
+    <configuration name="animated_one" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="Image_Editor" />
+      <option name="ENV_FILES" value="" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/pyside_version/data" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/pyside_version/data/animated_one.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
     <configuration name="image_widgets" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="Image_Editor" />
       <option name="ENV_FILES" value="" />
@@ -146,28 +161,6 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="mmm" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
-      <module name="Image_Editor" />
-      <option name="ENV_FILES" value="" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/mmm.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-      <option name="REDIRECT_INPUT" value="false" />
-      <option name="INPUT_FILE" value="" />
-      <method v="2" />
-    </configuration>
     <configuration name="view" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="Image_Editor" />
       <option name="ENV_FILES" value="" />
@@ -194,9 +187,9 @@
       <list>
         <item itemvalue="Python.main (1)" />
         <item itemvalue="Python.main" />
+        <item itemvalue="Python.animated_one" />
         <item itemvalue="Python.view" />
         <item itemvalue="Python.image_widgets" />
-        <item itemvalue="Python.mmm" />
       </list>
     </recent_temporary>
   </component>
@@ -376,7 +369,15 @@
       <option name="project" value="LOCAL" />
       <updated>1720860432556</updated>
     </task>
-    <option name="localTasksCounter" value="21" />
+    <task id="LOCAL-00021" summary="Pyside version added">
+      <option name="closed" value="true" />
+      <created>1725932241730</created>
+      <option name="number" value="00021" />
+      <option name="presentableId" value="LOCAL-00021" />
+      <option name="project" value="LOCAL" />
+      <updated>1725932241730</updated>
+    </task>
+    <option name="localTasksCounter" value="22" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -411,6 +412,7 @@
     <MESSAGE value="v0.7.2" />
     <MESSAGE value="v0.7.3" />
     <MESSAGE value="v0.8" />
-    <option name="LAST_COMMIT_MESSAGE" value="v0.8" />
+    <MESSAGE value="Pyside version added" />
+    <option name="LAST_COMMIT_MESSAGE" value="Pyside version added" />
   </component>
 </project>
