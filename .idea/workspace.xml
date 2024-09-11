@@ -5,22 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="2e61ce0c-060f-4fca-81c8-bb8576ec8ba6" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/pyside_version/data/mainWindow.ui" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/pyside_version/data/mainWindow_ui.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/pyside_version/data/resource.qrc" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/pyside_version/data/resource_rc.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pyside_version/MVC/controller.py" beforeDir="false" afterPath="$PROJECT_DIR$/pyside_version/MVC/controller.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pyside_version/MVC/model.py" beforeDir="false" afterPath="$PROJECT_DIR$/pyside_version/MVC/model.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pyside_version/MVC/view.py" beforeDir="false" afterPath="$PROJECT_DIR$/pyside_version/MVC/view.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pyside_version/data/TrimmablePainterPath.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/pyside_version/data/animated_one.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/pyside_version/data/animated_toggle.py" beforeDir="false" afterPath="$PROJECT_DIR$/pyside_version/data/custom_toggle.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pyside_version/data/canvas.py" beforeDir="false" afterPath="$PROJECT_DIR$/pyside_version/data/canvas.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pyside_version/data/filters.py" beforeDir="false" afterPath="$PROJECT_DIR$/pyside_version/data/filters.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pyside_version/data/mark_widget.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/pyside_version/data/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/pyside_version/data/constants.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pyside_version/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/pyside_version/main.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -84,7 +69,7 @@
       <recent name="C:\Users\rozes\PycharmProjects\Image_Editor\pyside_version\MVC" />
     </key>
   </component>
-  <component name="RunManager" selected="Python.main">
+  <component name="RunManager" selected="Python.main (1)">
     <configuration name="controller" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="Image_Editor" />
       <option name="ENV_FILES" value="" />
@@ -197,8 +182,8 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Python.main" />
         <item itemvalue="Python.main (1)" />
+        <item itemvalue="Python.main" />
         <item itemvalue="Python.delete_later" />
         <item itemvalue="Python.view" />
         <item itemvalue="Python.controller" />
@@ -413,7 +398,15 @@
       <option name="project" value="LOCAL" />
       <updated>1726060605699</updated>
     </task>
-    <option name="localTasksCounter" value="25" />
+    <task id="LOCAL-00025" summary="Pyside version finished">
+      <option name="closed" value="true" />
+      <created>1726070700531</created>
+      <option name="number" value="00025" />
+      <option name="presentableId" value="LOCAL-00025" />
+      <option name="project" value="LOCAL" />
+      <updated>1726070700531</updated>
+    </task>
+    <option name="localTasksCounter" value="26" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -452,6 +445,7 @@
     <MESSAGE value="working on canvas" />
     <MESSAGE value="working on model" />
     <MESSAGE value="almost finished" />
-    <option name="LAST_COMMIT_MESSAGE" value="almost finished" />
+    <MESSAGE value="Pyside version finished" />
+    <option name="LAST_COMMIT_MESSAGE" value="Pyside version finished" />
   </component>
 </project>

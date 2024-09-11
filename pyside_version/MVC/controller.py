@@ -76,44 +76,44 @@ class PhotoEditorController:
         if any(pillow_related_effects):
             # Working with pillow image
             image = self.model.pil_img.copy()
-            if self.model.brightness_level:
+            if self.model.brightness_level is not None:
                 # Set brightness
                 enhancer = ImageEnhance.Brightness(image)
                 image = enhancer.enhance(self.model.brightness_level)
 
-            if self.model.vibrance_level:
+            if self.model.vibrance_level is not None:
                 # set Vibrance
                 enhancer = ImageEnhance.Color(image)
                 image = enhancer.enhance(self.model.vibrance_level)
 
-            if self.model.blur_level:
+            if self.model.blur_level is not None:
                 # Set Blur
                 image = image.filter(ImageFilter.GaussianBlur(self.model.blur_level))
 
-            if self.model.contrast_level:
+            if self.model.contrast_level is not None:
                 enhancer = ImageEnhance.Contrast(image)
                 image = enhancer.enhance(self.model.contrast_level)
 
-            if self.model.effect:
+            if self.model.effect is not None:
                 # Apply the selected effect based on the effect_name
                 image = filters.apply_effect(image, effect=self.model.effect)
 
             image = convert_pil_to_qimage(image)
 
         # Working with QImage starting from now.
-        if self.model.flip_mode:
+        if self.model.flip_mode is not None:
             image = filters.flip_image(image, flip_mode=self.model.flip_mode)
 
-        if self.model.greyscale:
+        if self.model.greyscale is not None:
             image = image.convertToFormat(QImage.Format.Format_Grayscale8)
 
-        if self.model.color_invert:
+        if self.model.color_invert is not None:
             image.invertPixels(QImage.InvertMode.InvertRgb)
 
-        if self.model.rotation_degree:
+        if self.model.rotation_degree is not None:
             image = image.transformed(QTransform().rotate(self.model.rotation_degree))
 
-        if self.model.zoom_level:
+        if self.model.zoom_level is not None:
             image = filters.zoom_and_crop(image, self.model.zoom_level)
 
         self.last_qt_image = image
