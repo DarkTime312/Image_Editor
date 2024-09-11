@@ -4,13 +4,13 @@ from PySide6.QtCore import QRect, Qt
 from PySide6.QtGui import QImage, QTransform
 
 
-def flip_image(image: QImage, flip_mode) -> QImage:
+def flip_image(image: QImage, flip_mode: str) -> QImage:
     if flip_mode == 'X':
         return image.mirrored(True, False)  # Flip horizontally
     elif flip_mode == 'Y':
         return image.mirrored(False, True)  # Flip vertically
     elif flip_mode == 'Both':
-        return image.mirrored(True, True)  # Flip horizontally and vertically
+        return image.mirrored(True, True)  # Flip both horizontally and vertically
 
 
 def apply_effect(image: Image, effect: str) -> Image:

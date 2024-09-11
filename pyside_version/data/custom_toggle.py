@@ -8,18 +8,17 @@ from PySide6.QtGui import QColor, QBrush, QPaintEvent, QPen, QPainter
 
 
 class AnimatedToggle(QCheckBox):
-
-    _transparent_pen = QPen(Qt.transparent)
-    _light_grey_pen = QPen(Qt.lightGray)
+    _transparent_pen = QPen(Qt.GlobalColor.transparent)
+    _light_grey_pen = QPen(Qt.GlobalColor.lightGray)
 
     def __init__(self,
-        parent=None,
-        bar_color=Qt.gray,
-        checked_color="#00B0FF",
-        handle_color=Qt.white,
-        pulse_unchecked_color="#44999999",
-        pulse_checked_color="#4400B0EE"
-        ):
+                 parent=None,
+                 bar_color=Qt.GlobalColor.gray,
+                 checked_color="#00B0FF",
+                 handle_color=Qt.GlobalColor.white,
+                 pulse_unchecked_color="#44999999",
+                 pulse_checked_color="#4400B0EE"
+                 ):
         super().__init__(parent)
 
         # Save our properties on the object via self, so we can access them later
@@ -33,7 +32,7 @@ class AnimatedToggle(QCheckBox):
         self._pulse_unchecked_animation = QBrush(QColor(pulse_unchecked_color))
         self._pulse_checked_animation = QBrush(QColor(pulse_checked_color))
 
-        # Setup the rest of the widget.
+        # Set up the rest of the widget.
 
         self.setContentsMargins(8, 0, 8, 0)
         self._handle_position = 0
@@ -41,7 +40,7 @@ class AnimatedToggle(QCheckBox):
         self._pulse_radius = 0
 
         self.animation = QPropertyAnimation(self, b"handle_position", self)
-        self.animation.setEasingCurve(QEasingCurve.InOutCubic)
+        self.animation.setEasingCurve(QEasingCurve.Type.InOutCubic)
         self.animation.setDuration(200)  # time in ms
 
         self.pulse_anim = QPropertyAnimation(self, b"pulse_radius", self)
@@ -77,7 +76,7 @@ class AnimatedToggle(QCheckBox):
         handleRadius = round(0.24 * contRect.height())
 
         p = QPainter(self)
-        p.setRenderHint(QPainter.Antialiasing)
+        p.setRenderHint(QPainter.RenderHint.Antialiasing)
 
         p.setPen(self._transparent_pen)
         barRect = QRectF(
@@ -92,7 +91,7 @@ class AnimatedToggle(QCheckBox):
 
         xPos = contRect.x() + handleRadius + trailLength * self._handle_position
 
-        if self.pulse_anim.state() == QPropertyAnimation.Running:
+        if self.pulse_anim.state() == QPropertyAnimation.State.Running:
             p.setBrush(
                 self._pulse_checked_animation if
                 self.isChecked() else self._pulse_unchecked_animation)

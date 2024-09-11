@@ -1,15 +1,16 @@
-from PIL import Image
+from typing import Any
 
-from pyside_version.data.settings import *
+from PIL import Image
+from PySide6.QtCore import QObject
+
+from pyside_version.data.constants import *
 
 
 class PhotoEditorModel:
     def __init__(self):
         self.pil_img = None
-        self.image_path = None
         self.rotation_degree = None
         self.zoom_level = None
-        # self.flip_option = None
         self.brightness_level = None
         self.vibrance_level = None
         self.blur_level = None
@@ -20,6 +21,7 @@ class PhotoEditorModel:
         self.effect = None
 
         self.data = {
+            # Object name: (attribute, default value)
             'slider_rotation': ('rotation_degree', ROTATE_DEFAULT),
             'slider_zoom': ('zoom_level', ZOOM_DEFAULT),
             'slider_brightness': ('brightness_level', BRIGHTNESS_DEFAULT),
@@ -35,15 +37,12 @@ class PhotoEditorModel:
             'comboBox_effects': ('effect', EFFECTS_DEFAULT),
         }
 
-    def set_image_path(self, path: str):
-        self.image_path = path
+    def load_pil_img(self, path: str):
+        self.pil_img = Image.open(path)
 
-    def load_pill_img(self):
-        self.pil_img = Image.open(self.image_path)
         if self.pil_img.mode != 'RGB':
             self.pil_img = self.pil_img.convert('RGB')
 
-    def update_filters(self, sender_object, value):
+    def update_filters(self, sender_object: QObject, value: Any):
         attribute, default_value = self.data.get(sender_object.objectName())
         setattr(self, attribute, None if value == default_value else value)
-        print(vars(self))

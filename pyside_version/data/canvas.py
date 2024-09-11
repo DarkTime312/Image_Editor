@@ -1,4 +1,3 @@
-from PySide6.QtCore import QRectF
 from PySide6.QtGui import QPainter, Qt, QPixmap, QTransform, QImage
 from PySide6.QtWidgets import QGraphicsView, QGraphicsScene
 
@@ -8,22 +7,22 @@ class Canvas(QGraphicsView):
         super().__init__()
         self.original_image = None
         self.pixmap_rect = None
+        self.pixmap_item = None
+
         self.scene = QGraphicsScene(self)
         self.setScene(self.scene)
         self.setStyleSheet("background-color: transparent")
-        self.setRenderHint(QPainter.RenderHint.SmoothPixmapTransform | QPainter.Antialiasing)
-        # self.setRenderHint()
+        self.setRenderHint(QPainter.RenderHint.SmoothPixmapTransform | QPainter.RenderHint.Antialiasing)
 
         self.setViewportUpdateMode(QGraphicsView.ViewportUpdateMode.FullViewportUpdate)
         self.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
         self.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
-        self.pixmap_item = None
 
-    def load_image(self, image_path):
+    def load_image(self, image_path: str):
         self.original_image = QImage(image_path)
         self.display_image(self.original_image)
 
-    def display_image(self, image):
+    def display_image(self, image: QImage):
         pixmap = QPixmap(image)
 
         self.scene.clear()

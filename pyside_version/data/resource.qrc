@@ -1,0 +1,8 @@
+<RCC>
+  <qresource>
+    <file>../assets/icon.ico</file>
+    <file>../assets/checkbox.png</file>
+    <file>../assets/checkbox-pressed.png</file>
+    <file>../assets/checkbox-checked-pressed.png</file>
+  </qresource>
+</RCC>
