@@ -1,9 +1,11 @@
-from PySide6.QtCore import QSize, Signal, QRectF
-from PySide6.QtGui import QFont, QPixmap, Qt, QTransform, QPainter
-from PySide6.QtWidgets import QWidget, QHBoxLayout, QLabel, QSlider, QGraphicsView, QGraphicsScene, QVBoxLayout
+from PySide6.QtCore import Signal
+from PySide6.QtWidgets import QWidget, QHBoxLayout, QLabel, QSlider, QVBoxLayout, \
+    QFileDialog
+from hPyT import *
+
+from pyside_version.data.canvas import Canvas
 from pyside_version.data.mainWindow_ui import Ui_mainWindow
 from pyside_version.data.mark_widget import AnimatedToggle
-from pyside_version.data.canvas import Canvas
 from pyside_version.data.settings import *
 
 
@@ -29,6 +31,7 @@ class PhotoEditorView(QWidget):
         super().__init__()
         self.ui = Ui_mainWindow()
         self.ui.setupUi(self)
+        self.change_title_bar_color()
         self.create_widgets()
         self.connect_signals_to_slots()
         self.ui.stackedWidget.setCurrentIndex(0)
@@ -83,6 +86,8 @@ class PhotoEditorView(QWidget):
         self.ui.lineEdit_image_name.textChanged.connect(self.file_name_generator)
         self.ui.checkbox_jpg.toggled.connect(self.file_name_generator)
         self.ui.checkbox_png.toggled.connect(self.file_name_generator)
+        self.ui.btn_open.clicked.connect(self.evt_open_explorer_clicked)
+        self.ui.btn_close.clicked.connect(self.close_image)
 
     def update_display_text(self, value: int):
         self.labels.get(self.sender().objectName()).setText(handle_slider_values(value))
@@ -126,6 +131,25 @@ class PhotoEditorView(QWidget):
         self.reset_export_settings()
 
     def file_name_generator(self):
-        value = self.ui.lineEdit_image_name.text()
-        extension = '.jpg' if self.ui.checkbox_jpg.isChecked() else '.png'
-        self.ui.lbl_full_image_name.setText(f'{value.replace(' ', '_')}{extension}')
+        value: str = self.ui.lineEdit_image_name.text()
+        extension: str = '.jpg' if self.ui.checkbox_jpg.isChecked() else '.png'
+        full_name: str = f'{value.replace(' ', '_')}{extension}' if value else ''
+        self.ui.lbl_full_image_name.setText(full_name)
+
+    def evt_open_explorer_clicked(self):
+        path: str = QFileDialog.getExistingDirectory(self, 'Select a folder')
+        if path:
+            self.ui.lineEdit_save_path.setText(path)
+
+    def change_title_bar_color(self) -> None:
+        """
+        Changes the color of the title bar to black.
+        Only works for the windows.
+
+        :return: None
+        """
+        title_bar_color.set(self, '#242424')  # sets the titlebar color to white
+
+    def close_image(self):
+        self.ui.stackedWidget.setCurrentIndex(0)
+        self.reset_view()

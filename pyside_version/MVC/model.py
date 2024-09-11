@@ -1,9 +1,11 @@
-from PySide6.QtWidgets import QSlider
+from PIL import Image
+
 from pyside_version.data.settings import *
 
 
 class PhotoEditorModel:
     def __init__(self):
+        self.pil_img = None
         self.image_path = None
         self.rotation_degree = None
         self.zoom_level = None
@@ -35,6 +37,11 @@ class PhotoEditorModel:
 
     def set_image_path(self, path: str):
         self.image_path = path
+
+    def load_pill_img(self):
+        self.pil_img = Image.open(self.image_path)
+        if self.pil_img.mode != 'RGB':
+            self.pil_img = self.pil_img.convert('RGB')
 
     def update_filters(self, sender_object, value):
         attribute, default_value = self.data.get(sender_object.objectName())

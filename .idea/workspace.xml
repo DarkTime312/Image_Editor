@@ -5,12 +5,13 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="2e61ce0c-060f-4fca-81c8-bb8576ec8ba6" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/pyside_version/data/canvas.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/pyside_version/data/settings.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/pyside_version/assets/icon.ico" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/pyside_version/data/filters.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pyside_version/MVC/controller.py" beforeDir="false" afterPath="$PROJECT_DIR$/pyside_version/MVC/controller.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pyside_version/MVC/model.py" beforeDir="false" afterPath="$PROJECT_DIR$/pyside_version/MVC/model.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pyside_version/MVC/view.py" beforeDir="false" afterPath="$PROJECT_DIR$/pyside_version/MVC/view.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pyside_version/data/canvas.py" beforeDir="false" afterPath="$PROJECT_DIR$/pyside_version/data/canvas.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -52,6 +53,7 @@
   "keyToString": {
     "Python.animated_one.executor": "Run",
     "Python.controller.executor": "Run",
+    "Python.delete_later.executor": "Run",
     "Python.image_widgets.executor": "Run",
     "Python.main (1).executor": "Run",
     "Python.main.executor": "Run",
@@ -74,28 +76,6 @@
     </key>
   </component>
   <component name="RunManager" selected="Python.main (1)">
-    <configuration name="animated_one" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
-      <module name="Image_Editor" />
-      <option name="ENV_FILES" value="" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/pyside_version/data" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/pyside_version/data/animated_one.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-      <option name="REDIRECT_INPUT" value="false" />
-      <option name="INPUT_FILE" value="" />
-      <method v="2" />
-    </configuration>
     <configuration name="controller" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="Image_Editor" />
       <option name="ENV_FILES" value="" />
@@ -110,6 +90,28 @@
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/pyside_version/MVC/controller.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="delete_later" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="Image_Editor" />
+      <option name="ENV_FILES" value="" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/delete_later.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -188,9 +190,9 @@
       <list>
         <item itemvalue="Python.main (1)" />
         <item itemvalue="Python.main" />
+        <item itemvalue="Python.delete_later" />
         <item itemvalue="Python.view" />
         <item itemvalue="Python.controller" />
-        <item itemvalue="Python.animated_one" />
       </list>
     </recent_temporary>
   </component>
@@ -386,7 +388,15 @@
       <option name="project" value="LOCAL" />
       <updated>1725949628479</updated>
     </task>
-    <option name="localTasksCounter" value="23" />
+    <task id="LOCAL-00023" summary="working on model">
+      <option name="closed" value="true" />
+      <created>1725975266174</created>
+      <option name="number" value="00023" />
+      <option name="presentableId" value="LOCAL-00023" />
+      <option name="project" value="LOCAL" />
+      <updated>1725975266174</updated>
+    </task>
+    <option name="localTasksCounter" value="24" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -423,6 +433,7 @@
     <MESSAGE value="v0.8" />
     <MESSAGE value="Pyside version added" />
     <MESSAGE value="working on canvas" />
-    <option name="LAST_COMMIT_MESSAGE" value="working on canvas" />
+    <MESSAGE value="working on model" />
+    <option name="LAST_COMMIT_MESSAGE" value="working on model" />
   </component>
 </project>
